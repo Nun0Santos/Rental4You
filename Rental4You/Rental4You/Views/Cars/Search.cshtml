@@ -1,0 +1,80 @@
+﻿
+@model Rental4You.ViewModels.SearchCarViewModel
+@{
+
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+<h1>Os nossos cursos</h1>
+
+
+@if (!string.IsNullOrEmpty(Model.TextToSearch))
+{
+    <p>Resultado da pesquisa por "@Model.TextToSearch":</p>
+
+    @if (Model.NumberOfResults == 0)
+    {
+        <p class="alert alert-warning">
+            Não foi possível
+            encontrar cursos com os dados introduzidos.
+            Por favor, reveja a sua pesquisa
+        </p>
+    }
+}
+else
+{
+    <p>Existe(m) @Model.NumberOfResults Carros(s) disponíveis</p>
+}
+
+
+
+<div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+
+    @foreach (Car c in Model.ListOfCars)
+    {
+        <div class="col">
+            <div class="card mb-4 rounded-3 shadow-sm">
+                <div class="card-header py-3">
+                    @if (string.IsNullOrEmpty(Model.TextToSearch))
+                    {
+                        <h4 class="my-0 fw-normal">
+                            @Html.DisplayFor(model=>c.Maker)
+                            (
+                            @Html.DisplayFor(model=>c.Model)
+                            )
+                        </h4>
+                    }
+                    else
+                    {
+                        <h4 class="my-0 fw-normal">
+                            @Html.Raw(
+                                    c.Location.ToString().ToLower().Replace(
+                    Model.TextToSearch.ToLower(), "<span class=\"bg-warning\">"+Model.TextToSearch+"</span>"))
+
+                            (@Html.DisplayFor(model=>c.Model))
+                        </h4>
+                    }
+
+
+                </div>
+                <div class="card-body">
+                    <h1 class="card-title pricing-card-title">€ @c.<small class="text-muted fw-light"></small></h1>
+                    @if (string.IsNullOrEmpty(Model.TextToSearch))
+                    {
+                        <p>@Html.DisplayFor(model=>c.Maker)</p>
+                    }
+                    else
+                    {
+                        <p>
+                            @Html.Raw(c.Model.ToString().ToLower().Replace(Model.TextToSearch.ToLower(), "<span class=\"bg-warning\">"+Model.TextToSearch+"</span>"))
+                        </p>
+                    }
+
+                    <a asp-controller="Cars" asp-action="Details" asp-route-id="@c.Id"
+                   class="w-100 btn btn-lg btn-outline-primary">Saber mais</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
