@@ -265,6 +265,13 @@ namespace Rental4You.Migrations
                     b.Property<int>("Year")
                         .HasColumnType("int");
 
+                    b.Property<string>("fuel")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<float>("price")
+                        .HasColumnType("real");
+
                     b.Property<string>("state")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -320,6 +327,9 @@ namespace Rental4You.Migrations
 
                     b.Property<int>("deliveryId")
                         .HasColumnType("int");
+
+                    b.Property<float>("price")
+                        .HasColumnType("real");
 
                     b.Property<int>("returnalId")
                         .HasColumnType("int");
