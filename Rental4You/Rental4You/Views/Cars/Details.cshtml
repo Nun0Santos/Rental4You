@@ -4,34 +4,7 @@
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout2.cshtml";
 }
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Rental4You</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">
-    <link rel="stylesheet" href="css/animate.css">
-
-    <link rel="stylesheet" href="css/owl.carousel.min.css">
-    <link rel="stylesheet" href="css/owl.theme.default.min.css">
-    <link rel="stylesheet" href="css/magnific-popup.css">
-
-    <link rel="stylesheet" href="css/aos.css">
-
-    <link rel="stylesheet" href="css/ionicons.min.css">
-
-    <link rel="stylesheet" href="css/bootstrap-datepicker.css">
-    <link rel="stylesheet" href="css/jquery.timepicker.css">
-
-
-    <link rel="stylesheet" href="css/flaticon.css">
-    <link rel="stylesheet" href="css/icomoon.css">
-    <link rel="stylesheet" href="css/style.css">
-</head>
  <body>
     <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('images/bg_3.jpg');" data-stellar-background-ratio="0.5">
       <div class="overlay"></div>
@@ -53,8 +26,9 @@
       			<div class="car-details">
       				<div class="img rounded" style="background-image: url(images/bg_1.jpg);"></div>
       				<div class="text text-center">
-      					<span class="subheading"> @Html.DisplayNameFor(model => model.Maker)</span>
+      					<span class="subheading"> @Html.Raw(Model.Maker)</span>
                         <h2>@Html.DisplayNameFor(model => model.Model)</h2>
+                        <h2 class="flaticon-diesel"></h2>
       				</div>
       			</div>
       		</div>
@@ -68,7 +42,7 @@
 	              	<div class="text">
 		                <h3 class="heading mb-0 pl-3">
 		                	Mileage
-                            <span>@Html.DisplayNameFor(model => model.Km)</span>
+                            <span>@Html.Raw(Model.Km)</span>
 		                </h3>
 	                </div>
                 </div>

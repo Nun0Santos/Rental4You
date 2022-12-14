@@ -102,7 +102,7 @@ namespace Rental4You.Areas.Identity.Pages.Account.Manage
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync([FromForm]IFormFile img)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
@@ -128,7 +128,43 @@ namespace Rental4You.Areas.Identity.Pages.Account.Manage
             }
 
             await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your profile has been updated";
+
+            if (!Directory.Exists("wwwroot\\uploads"))
+            {
+                Directory.CreateDirectory("wwwroot\\uploads");
+            }
+            if (!Directory.Exists("wwwroot\\uploads\\users"))
+            {
+                Directory.CreateDirectory("wwwroot\\uploads\\users");
+            }
+            if (!Directory.Exists("wwwroot\\uploads\\users\\" + user.Id))
+            {
+                Directory.CreateDirectory("wwwroot\\uploads\\users\\" + user.Id);
+            }
+            if (Directory.EnumerateFileSystemEntries("wwwroot\\uploads\\users\\" + user.Id).Any())
+            {
+                DirectoryInfo di = new DirectoryInfo("wwwroot\\uploads\\users\\" + user.Id);
+
+                foreach (FileInfo file in di.GetFiles())
+                {
+                    file.Delete();
+                }
+            }
+
+            if (img != null)
+            {
+                var fs = System.IO.File.Create("wwwroot\\uploads\\users\\" + user.Id + "\\test.png");
+                using (var stream = new MemoryStream())
+                {
+                    await img.CopyToAsync(stream);
+                    stream.WriteTo(fs);
+                }
+                fs.Close();
+                StatusMessage = "Your profile has been updated";
+                return RedirectToPage();
+            }
+
+            StatusMessage = "Your profile has NOT been updated";
             return RedirectToPage();
         }
     }

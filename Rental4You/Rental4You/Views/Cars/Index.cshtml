@@ -27,16 +27,16 @@ Layout = "~/Views/Shared/_Layout2.cshtml";
 
         <section class="ftco-section bg-light">
             <div class="container">
+                <div class="row">
                 @foreach (var item in Model)
                   {       
-                    <div class="row">
                         <div class="col-md-4">
                             <div class="car-wrap rounded ftco-animate fadeInUp ftco-animated">
                                 <div class="img rounded d-flex align-items-end" style="background-image: url(images/car-1.jpg);"></div>
                                 <div class="text">
                                     <h2 class="mb-0">@Html.DisplayFor(modelItem => item.Maker)</h2>
                                     <div class="d-flex mb-3">
-                                        <span class="cat">@Html.DisplayFor(modelItem => item.Model)</span>   
+                                        <span class="cat">@Html.DisplayFor(modelItem => item.Model)</span>
                                     </div>
                                     <p class="d-flex mb-0 d-block">
                                         <a asp-controller="Reservations" asp-action="Create" class="btn btn-primary py-2 mr-1">Book now</a>
@@ -45,8 +45,8 @@ Layout = "~/Views/Shared/_Layout2.cshtml";
                                 </div>
                             </div>
                         </div>
-                    </div>
                   }
+                  </div>
             </div>
         </section>
     </body>
