@@ -6,56 +6,65 @@
     ViewData["ActivePage"] = ManageNavPages.Index;
 }
 
-<h3>@ViewData["Title"]</h3>
-<partial name="_StatusMessage" for="StatusMessage" />
-<div class="row">
-    <div class="col-md-6">
-        <form id="profile-form" method="post" enctype="multipart/form-data">
+<body>
+    <section class="ftco-section ftco-no-pt">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-12 heading-section ftco-animate mb-5">
+                    <h2 class="mb-2">Profile</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+            <form id="profile-form" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-floating">
                 <div>
-                    
                     <img id="MyAvatar" class="img-thumbnail" src="~/images/user.png" width="400" height="400"/>
                 </div>
-                    <div>
-                        <label>Escolha uma imagem de perfil:</label>
-                        <input type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg" class="form-control" onchange="document.getElementById('MyAvatar').src = window.URL.createObjectURL(this.files[0])"/>
-                        <span class="text-danger"></span>
-                    </div>
+                <div>
+                    <label>Escolha uma imagem de perfil:</label>
+                    <input type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg" class="form-control" onchange="document.getElementById('MyAvatar').src = window.URL.createObjectURL(this.files[0])"/>
+                    <span class="text-danger"></span>
+                </div>
             </div>
             <div class="form-floating">
-                <input asp-for="Username" class="form-control" disabled/>
                 <label asp-for="Username" class="form-label"></label>
+                <input asp-for="Username" class="form-control" disabled/>
             </div>           
             <div class="form-floating">
-                <input asp-for="Input.Name" class="form-control" />
                 <label asp-for="Input.Name" class="form-label"></label>
+                <input asp-for="Input.Name" class="form-control" />
                 <span asp-validation-for="Input.Name" class="text-danger"></span>
             </div>
             <div class="form-floating">
-                <input asp-for="Input.Surname" class="form-control" />
                 <label asp-for="Input.Surname" class="form-label"></label>
+                <input asp-for="Input.Surname" class="form-control" />
                 <span asp-validation-for="Input.Surname" class="text-danger"></span>
             </div>            
             <div class="form-floating">
-                <input asp-for="Input.TaxNumber" class="form-control"/>
                 <label asp-for="Input.TaxNumber" class="form-label"></label>
+                <input asp-for="Input.TaxNumber" class="form-control"/>
                 <span asp-validation-for="Input.TaxNumber" class="text-danger"></span>
             </div>
             <div class="form-floating">
-                <input asp-for="Input.Email" class="form-control" disabled/>
                 <label asp-for="Input.Email" class="form-label"></label>
+                <input asp-for="Input.Email" class="form-control" disabled/>
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
             <div class="form-floating">
-                <input asp-for="Input.PhoneNumber" class="form-control"/>
                 <label asp-for="Input.PhoneNumber" class="form-label"></label>
+                <input asp-for="Input.PhoneNumber" class="form-control"/>
                 <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
             </div>
-            <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+            <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary" style="margin-top: 20px">Save</button>
         </form>
     </div>
-</div>
+            </div>
+        </div>
+    </section>
+</body>
+
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

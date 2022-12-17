@@ -71,6 +71,8 @@ namespace Rental4You.Areas.Identity.Pages.Account.Manage
 
             [Display(Name = "Email")]
             public string Email { get; set; }
+            [Display(Name = "Image")]
+            public string img { get; set; }
         }
 
         private async Task LoadAsync(ApplicationUser user)
@@ -80,14 +82,53 @@ namespace Rental4You.Areas.Identity.Pages.Account.Manage
 
             Username = userName;
 
-            Input = new InputModel
+            if (Directory.Exists("wwwroot\\uploads\\users\\" + user.Id))
             {
-                PhoneNumber = phoneNumber,
-                Name = user.Name,
-                Surname = user.Surname,
-                TaxNumber = user.TaxNumber,
-                Email = user.Email
-            };
+                var files = Directory.EnumerateFileSystemEntries("wwwroot\\uploads\\users\\" + user.Id);
+
+
+                if (files.Any())
+                {
+                    var profileIMG = "";
+                    foreach (string file in files)
+                    {
+                        profileIMG = file;
+                    }
+
+                    Input = new InputModel
+                    {
+                        PhoneNumber = phoneNumber,
+                        Name = user.Name,
+                        Surname = user.Surname,
+                        TaxNumber = user.TaxNumber,
+                        Email = user.Email,
+                        img = profileIMG
+                    };
+                }
+                else
+                {
+                    Input = new InputModel
+                    {
+                        PhoneNumber = phoneNumber,
+                        Name = user.Name,
+                        Surname = user.Surname,
+                        TaxNumber = user.TaxNumber,
+                        Email = user.Email
+                    };
+                }
+            }
+            else
+            {
+                Input = new InputModel
+                {
+                    PhoneNumber = phoneNumber,
+                    Name = user.Name,
+                    Surname = user.Surname,
+                    TaxNumber = user.TaxNumber,
+                    Email = user.Email,
+
+                };
+            }
         }
 
         public async Task<IActionResult> OnGetAsync()
