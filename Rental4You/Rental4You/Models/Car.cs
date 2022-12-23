@@ -6,7 +6,7 @@ namespace Rental4You.Models
     public class Car
     {
         public int Id { get; set; }
-        [Display(Name = "Marker", Prompt = "Enter the car brand")]
+        [Display(Name = "Maker", Prompt = "Enter the car brand")]
 
         public string Maker { get; set; }
         [Display(Name = "Model", Prompt = "Enter the car model")]
@@ -28,9 +28,11 @@ namespace Rental4You.Models
         public string Location { get; set; }
         [Display(Name = "Km", Prompt = "Enter the car kilometers")]
         public double Km { get; set; }
-        [Display(Name = "state", Prompt = "Enter the car kilometers")]
+        [Display(Name = "State", Prompt = "Enter the state of the car")]
         public string state { get; set; }
+        [Display(Name = "Price", Prompt = "Enter the price of the car")]
         public float price { get; set; }
+        [Display(Name = "Fuel", Prompt = "Enter the type of fuel of the car")]
         public string fuel { get; set; }
         public Company company { get; set; } 
         public int companyId { get; set; }
