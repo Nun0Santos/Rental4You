@@ -8374,6 +8374,15 @@ h1, h2, h3, h4, h5,
     .hero-wrap.hero-wrap-2 .slider-text {
       height: 600px !important; }
 
+.hero-wrap-3 {
+    width: 100%;
+    height: 550px;
+    position: inherit;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: top center;
+}
+
 .slider-text {
   height: 850px; }
   @media (max-width: 991.98px) {

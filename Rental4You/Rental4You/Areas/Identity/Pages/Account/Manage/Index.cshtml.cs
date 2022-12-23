@@ -71,6 +71,8 @@ namespace Rental4You.Areas.Identity.Pages.Account.Manage
 
             [Display(Name = "Email")]
             public string Email { get; set; }
+            [Display(Name = "Image")]
+            public string img { get; set; }
         }
 
         private async Task LoadAsync(ApplicationUser user)
@@ -80,13 +82,37 @@ namespace Rental4You.Areas.Identity.Pages.Account.Manage
 
             Username = userName;
 
+            if (Directory.Exists("wwwroot\\uploads\\users\\" + user.Id))
+            {
+                List<string> files = Directory.EnumerateFiles("wwwroot\\uploads\\users\\" + user.Id).ToList();
+
+                if (files.Count > 0)
+                {
+                    string image = files[0].Replace("wwwroot", "");
+
+                    Input = new InputModel
+                    {
+                        PhoneNumber = phoneNumber,
+                        Name = user.Name,
+                        Surname = user.Surname,
+                        TaxNumber = user.TaxNumber,
+                        Email = user.Email,
+                        img = image
+                    };
+
+                    return;
+                }
+            }
+
+
             Input = new InputModel
             {
                 PhoneNumber = phoneNumber,
                 Name = user.Name,
                 Surname = user.Surname,
                 TaxNumber = user.TaxNumber,
-                Email = user.Email
+                Email = user.Email,
+                img = null
             };
         }
 
@@ -102,7 +128,7 @@ namespace Rental4You.Areas.Identity.Pages.Account.Manage
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync([FromForm]IFormFile img)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
@@ -127,8 +153,60 @@ namespace Rental4You.Areas.Identity.Pages.Account.Manage
                 }
             }
 
-            await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your profile has been updated";
+            if (Input.Name != user.Name)
+            {
+                user.Name = Input.Name;
+            }
+
+            if (Input.Surname != user.Surname)
+            {
+                user.Surname = Input.Surname;
+            }
+
+            if (Input.TaxNumber != user.TaxNumber)
+            {
+                user.TaxNumber = Input.TaxNumber;
+            }
+
+
+            if (img != null)
+            {
+                if (!Directory.Exists("wwwroot\\uploads"))
+                {
+                    Directory.CreateDirectory("wwwroot\\uploads");
+                }
+                if (!Directory.Exists("wwwroot\\uploads\\users"))
+                {
+                    Directory.CreateDirectory("wwwroot\\uploads\\users");
+                }
+                if (!Directory.Exists("wwwroot\\uploads\\users\\" + user.Id))
+                {
+                    Directory.CreateDirectory("wwwroot\\uploads\\users\\" + user.Id);
+                }
+                if (Directory.EnumerateFiles("wwwroot\\uploads\\users\\" + user.Id).Any())
+                {
+                    DirectoryInfo di = new DirectoryInfo("wwwroot\\uploads\\users\\" + user.Id);
+
+                    foreach (FileInfo file in di.GetFiles())
+                    {
+                        file.Delete();
+                    }
+                }
+
+                var fs = System.IO.File.Create("wwwroot\\uploads\\users\\" + user.Id + "\\" + img.FileName);
+                using (var stream = new MemoryStream())
+                {
+                    await img.CopyToAsync(stream);
+                    stream.WriteTo(fs);
+                }
+                fs.Close();
+                await _userManager.UpdateAsync(user);
+                StatusMessage = "Your profile has been updated";
+                return RedirectToPage();
+            }
+
+            await _userManager.UpdateAsync(user);
+            StatusMessage = "Your profile has NOT been updated";
             return RedirectToPage();
         }
     }
