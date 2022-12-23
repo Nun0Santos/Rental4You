@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Rental4You.Data;
 using Rental4You.Models;
+using Rental4You.ViewModels;
 
 namespace Rental4You.Controllers
 {
@@ -22,8 +24,8 @@ namespace Rental4You.Controllers
         // GET: Cars
         public async Task<IActionResult> Index()
         {
-         
-              return View(await _context.cars.ToListAsync());
+
+            return View(await _context.cars.ToListAsync());
         }
 
         // GET: Cars/Details/5
@@ -87,7 +89,7 @@ namespace Rental4You.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Maker,Model,Type,Location,Km,state")] Car car)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Maker,Model,Type,Transmission,Seats,Year,LicensePlate,Location,Km,state")] Car car)
         {
             if (id != car.Id)
             {
@@ -149,14 +151,97 @@ namespace Rental4You.Controllers
             {
                 _context.cars.Remove(car);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool CarExists(int id)
         {
-          return _context.cars.Any(e => e.Id == id);
+            return _context.cars.Any(e => e.Id == id);
+        }
+        public async Task<IActionResult> Search([Bind("PickupLocation,VehicleType,PickupDate,ReturnDate")] SearchCarViewModel search)
+        {
+            SearchCarViewModel searchCar = new SearchCarViewModel();
+       
+            if (string.IsNullOrWhiteSpace(search.PickupLocation))
+                searchCar.ListOfCars = await _context.cars.ToListAsync();
+                if (string.IsNullOrWhiteSpace(search.VehicleType))
+                    searchCar.ListOfCars = await _context.cars.ToListAsync();
+                //    if (DateTime.MinValue(search.PickupDate))
+                //        searchCar.ListOfCars = await _context.cars.ToListAsync();
+                //        if (DateTime.MinValue(search.ReturnDate))
+                //            searchCar.ListOfCars = await _context.cars.ToListAsync();
+
+            else
+            {
+                searchCar.ListOfCars = await _context.cars.
+                    Where(c => c.Location.Contains(search.PickupLocation) 
+                         ).ToListAsync();
+
+                searchCar.TextToSearch = search.PickupLocation;
+            }
+
+
+            searchCar.NumberOfResults = searchCar.ListOfCars.Count();
+
+
+            return View(searchCar);
+
+        }
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Search([Bind("PickupLocation,VehicleType,PickupDate,ReturnDate")] SearchCarViewModel searchCar )
+        //{
+
+        //    if (string.IsNullOrEmpty(searchCar.TextToSearch))
+        //    {
+        //        searchCar.ListOfCars =
+        //            await _context.cars.Include("marca").ToListAsync();
+
+        //        searchCar.NumberOfResults = searchCar.ListOfCars.Count();
+        //    }
+        //    else
+        //    {
+        //        searchCar.ListOfCars =
+        //            await _context.cars.Include(c => c.Maker).Where(
+        //                c => c.Maker.Contains(searchCar.TextToSearch)
+        //                ).ToListAsync();
+
+        //        searchCar.NumberOfResults = searchCar.ListOfCars.Count();
+
+        //    }
+
+        //    return View(searchCar);
+        //}
+        public ActionResult GetProducts([FromForm] string sort)
+        {
+            //List<Car> products = GetProducts();
+            List<Car> cars = new List<Car>();
+
+            if (sort == "ascending")
+            {
+                // Ordena a lista de produtos por preço crescente
+                SearchCarViewModel sortedProductsView = new SearchCarViewModel();
+                var sortedProductsGrowing = cars.OrderBy(p => p.price);
+                return View(sortedProductsView);
+            }
+            else if (sort == "descending")
+            {
+                // Ordena a lista de produtos por preço decrescente
+                SearchCarViewModel sortedProductsView = new SearchCarViewModel();
+                var sortedProductsDescending = cars.OrderByDescending(p => p.price);
+                return View(sortedProductsView);
+            }
+            else
+            {
+                // Não ordena a lista de produtos
+                return RedirectToAction(nameof(Index));
+
+            }
         }
     }
+
 }
+  

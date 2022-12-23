@@ -170,6 +170,9 @@ namespace Rental4You.Migrations
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("CompanyId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -227,6 +230,8 @@ namespace Rental4You.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CompanyId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -279,13 +284,42 @@ namespace Rental4You.Migrations
                     b.Property<int>("Year")
                         .HasColumnType("int");
 
+                    b.Property<int>("companyId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("fuel")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<float>("price")
+                        .HasColumnType("real");
+
                     b.Property<string>("state")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("companyId");
+
                     b.ToTable("cars");
+                });
+
+            modelBuilder.Entity("Rental4You.Models.Company", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Company");
                 });
 
             modelBuilder.Entity("Rental4You.Models.Delivery", b =>
@@ -310,7 +344,17 @@ namespace Rental4You.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("carId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("employeeId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("carId");
+
+                    b.HasIndex("employeeId");
 
                     b.ToTable("deliveries");
                 });
@@ -322,9 +366,6 @@ namespace Rental4You.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("End")
                         .HasColumnType("datetime2");
@@ -338,43 +379,21 @@ namespace Rental4You.Migrations
                     b.Property<int>("deliveryId")
                         .HasColumnType("int");
 
-                    b.Property<int>("returnalId")
-                        .HasColumnType("int");
+                    b.Property<string>("employeeId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<float>("price")
+                        .HasColumnType("real");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("carId");
 
                     b.HasIndex("deliveryId");
 
-                    b.HasIndex("returnalId");
+                    b.HasIndex("employeeId");
 
                     b.ToTable("reservations");
-                });
-
-            modelBuilder.Entity("Rental4You.Models.Returnal", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<bool>("Damage")
-                        .HasColumnType("bit");
-
-                    b.Property<double>("Km")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Observations")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("returnals");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -428,12 +447,43 @@ namespace Rental4You.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Rental4You.Models.ApplicationUser", b =>
+                {
+                    b.HasOne("Rental4You.Models.Company", null)
+                        .WithMany("Employees")
+                        .HasForeignKey("CompanyId");
+                });
+
+            modelBuilder.Entity("Rental4You.Models.Car", b =>
+                {
+                    b.HasOne("Rental4You.Models.Company", "company")
+                        .WithMany()
+                        .HasForeignKey("companyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("company");
+                });
+
+            modelBuilder.Entity("Rental4You.Models.Delivery", b =>
+                {
+                    b.HasOne("Rental4You.Models.Car", "car")
+                        .WithMany()
+                        .HasForeignKey("carId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Rental4You.Models.ApplicationUser", "employee")
+                        .WithMany()
+                        .HasForeignKey("employeeId");
+
+                    b.Navigation("car");
+
+                    b.Navigation("employee");
+                });
+
             modelBuilder.Entity("Rental4You.Models.Reservation", b =>
                 {
-                    b.HasOne("Rental4You.Models.ApplicationUser", null)
-                        .WithMany("Reservations")
-                        .HasForeignKey("ApplicationUserId");
-
                     b.HasOne("Rental4You.Models.Car", "car")
                         .WithMany()
                         .HasForeignKey("carId")
@@ -446,22 +496,25 @@ namespace Rental4You.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Rental4You.Models.Returnal", "returnal")
-                        .WithMany()
-                        .HasForeignKey("returnalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("Rental4You.Models.ApplicationUser", "employee")
+                        .WithMany("Reservations")
+                        .HasForeignKey("employeeId");
 
                     b.Navigation("car");
 
                     b.Navigation("delivery");
 
-                    b.Navigation("returnal");
+                    b.Navigation("employee");
                 });
 
             modelBuilder.Entity("Rental4You.Models.ApplicationUser", b =>
                 {
                     b.Navigation("Reservations");
+                });
+
+            modelBuilder.Entity("Rental4You.Models.Company", b =>
+                {
+                    b.Navigation("Employees");
                 });
 #pragma warning restore 612, 618
         }

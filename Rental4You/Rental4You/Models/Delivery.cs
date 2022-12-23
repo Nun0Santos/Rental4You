@@ -7,5 +7,8 @@
         public string State { get; set; }
         public bool Damage { get; set; }
         public string Observations { get; set; }
+        public Car car { get; set; }
+        public ApplicationUser employee { get; set; }
+
     }
 }

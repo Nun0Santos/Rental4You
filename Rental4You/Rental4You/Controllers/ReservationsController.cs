@@ -22,7 +22,7 @@ namespace Rental4You.Controllers
         // GET: Reservations
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.reservations.Include(r => r.car).Include(r => r.delivery).Include(r => r.returnal);
+            var applicationDbContext = _context.reservations.Include(r => r.car).Include(r => r.delivery);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -37,7 +37,7 @@ namespace Rental4You.Controllers
             var reservation = await _context.reservations
                 .Include(r => r.car)
                 .Include(r => r.delivery)
-                .Include(r => r.returnal)
+             
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (reservation == null)
             {
@@ -52,7 +52,7 @@ namespace Rental4You.Controllers
         {
             ViewData["carId"] = new SelectList(_context.cars, "Id", "Id");
             ViewData["deliveryId"] = new SelectList(_context.deliveries, "Id", "Id");
-            ViewData["returnalId"] = new SelectList(_context.returnals, "Id", "Id");
+         
             return View();
         }
 
@@ -71,7 +71,7 @@ namespace Rental4You.Controllers
             }
             ViewData["carId"] = new SelectList(_context.cars, "Id", "Id", reservation.carId);
             ViewData["deliveryId"] = new SelectList(_context.deliveries, "Id", "Id", reservation.deliveryId);
-            ViewData["returnalId"] = new SelectList(_context.returnals, "Id", "Id", reservation.returnalId);
+        
             return View(reservation);
         }
 
@@ -90,7 +90,7 @@ namespace Rental4You.Controllers
             }
             ViewData["carId"] = new SelectList(_context.cars, "Id", "Id", reservation.carId);
             ViewData["deliveryId"] = new SelectList(_context.deliveries, "Id", "Id", reservation.deliveryId);
-            ViewData["returnalId"] = new SelectList(_context.returnals, "Id", "Id", reservation.returnalId);
+      
             return View(reservation);
         }
 
@@ -128,7 +128,7 @@ namespace Rental4You.Controllers
             }
             ViewData["carId"] = new SelectList(_context.cars, "Id", "Id", reservation.carId);
             ViewData["deliveryId"] = new SelectList(_context.deliveries, "Id", "Id", reservation.deliveryId);
-            ViewData["returnalId"] = new SelectList(_context.returnals, "Id", "Id", reservation.returnalId);
+         
             return View(reservation);
         }
 
@@ -143,7 +143,7 @@ namespace Rental4You.Controllers
             var reservation = await _context.reservations
                 .Include(r => r.car)
                 .Include(r => r.delivery)
-                .Include(r => r.returnal)
+            
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (reservation == null)
             {

@@ -7,24 +7,23 @@
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
-        <li class="collapse navbar-collapse" id="ftco-nav">>
+        <li class="nav-item">
             <a class="nav-link" asp-area="Identity"
            asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item col-5">
             <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                <button type="submit" class="nav-link">Logout</button>
+                <button type="submit" class="btn btn-link" style="margin-top: 12px">Logout</button>
             </form>
         </li>
     }
     else
     {
         <li class="nav-item">
-            <a class="nav-item" asp-area="Identity" asp-page="/Account/Register">REGISTO</a>
+            <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Register">REGISTO</a>
         </li>
-        <li class="nav-item">
-
-            <a class="nav-item" asp-area="Identity" asp-page="/Account/Login">ENTRAR</a>
+        <li class="nav-item col-5">
+            <a class="btn btn-outline-primary ms-2 me-2" asp-area="Identity" asp-page="/Account/Login">ENTRAR</a>
         </li>
     }
 </ul>

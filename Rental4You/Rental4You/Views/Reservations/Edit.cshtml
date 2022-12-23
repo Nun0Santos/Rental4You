@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Edit";
-    Layout = "~/Views/Shared/_Layout2.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 
 }
 
@@ -34,11 +34,6 @@
                 <label asp-for="deliveryId" class="control-label"></label>
                 <select asp-for="deliveryId" class="form-control" asp-items="ViewBag.deliveryId"></select>
                 <span asp-validation-for="deliveryId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="returnalId" class="control-label"></label>
-                <select asp-for="returnalId" class="form-control" asp-items="ViewBag.returnalId"></select>
-                <span asp-validation-for="returnalId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

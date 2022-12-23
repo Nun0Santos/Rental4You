@@ -13,10 +13,14 @@ namespace Rental4You.ViewModels
 
         [Display(Name = "ReturnDate", Prompt = "yyyy-mm-dd")]
         public DateTime ReturnDate { get; set; }
+
+        [Display(Name = "PickupLocation", Prompt = "City")]
+        public string PickupLocation { get; set; }
+
+        [Display(Name = "VehicleType", Prompt = "SUV,Sport")]
+        public string VehicleType { get; set; }
         public string TextToSearch { get; set; }
         public int NumberOfResults { get; set; }
-
-
 
     }
 }

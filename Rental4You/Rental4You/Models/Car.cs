@@ -32,5 +32,8 @@ namespace Rental4You.Models
         public string state { get; set; }
         public float price { get; set; }
         public string fuel { get; set; }
+        public Company company { get; set; } 
+        public int companyId { get; set; }
+
     }
 }

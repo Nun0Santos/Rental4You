@@ -2,14 +2,9 @@
 
 @{
     ViewData["Title"] = "Create";
-    Layout = "~/Views/Shared/_Layout2.cshtml";
-
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h1>Create</h1>
-
-<h4>Reservation</h4>
-<hr />
+<body>
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
@@ -32,10 +27,7 @@
                 <label asp-for="deliveryId" class="control-label"></label>
                 <select asp-for="deliveryId" class ="form-control" asp-items="ViewBag.deliveryId"></select>
             </div>
-            <div class="form-group">
-                <label asp-for="returnalId" class="control-label"></label>
-                <select asp-for="returnalId" class ="form-control" asp-items="ViewBag.returnalId"></select>
-            </div>
+            
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -46,7 +38,4 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+</body>

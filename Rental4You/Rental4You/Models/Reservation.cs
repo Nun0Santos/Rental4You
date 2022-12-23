@@ -9,8 +9,7 @@
         public int carId { get; set; } //FK
         public Delivery delivery { get; set; }
         public int deliveryId { get; set; } //fk
-        public Returnal returnal { get; set; }
-        public int returnalId { get; set; } //FK
         public float price { get; set; }
+        public ApplicationUser employee { get; set; }
     }
 }

@@ -7,12 +7,11 @@ Layout = "~/Views/Shared/_Layout2.cshtml";
 }
 
 @*<h1>Ours Cars</h1>
+<a asp-action="Create">Create New</a>*@
 
-<p>
-<a asp-action="Create">Create New</a>
-</p>
-*@
+<html>
     <body>
+   
         <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('images/bg_3.jpg');" data-stellar-background-ratio="0.5">
             <div class="overlay"></div>
             <div class="container">
@@ -24,31 +23,40 @@ Layout = "~/Views/Shared/_Layout2.cshtml";
                 </div>
             </div>
         </section>
-
-        <section class="ftco-section bg-light">
-            <div class="container">
+    <section class="ftco-section bg-light">
+        <form asp-action="GetProducts" method="get" enctype="multipart/form-data">
+            <label for="sort">Option:</label>
+            <select id="sort" name="sort">
+                <option value="ascending">Preço: Crescente</option>
+                <option value="descending">Preço: Decrescente</option>
+            </select>
+            <input name="sort" asp-controller="Cars" asp-action="GetProducts" type="submit" value="Pesquisar" />
+        </form>
+        <div class="container">
+            <div class="row">
                 @foreach (var item in Model)
-                  {       
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="car-wrap rounded ftco-animate fadeInUp ftco-animated">
-                                <div class="img rounded d-flex align-items-end" style="background-image: url(images/car-1.jpg);"></div>
-                                <div class="text">
-                                    <h2 class="mb-0">@Html.DisplayFor(modelItem => item.Maker)</h2>
-                                    <div class="d-flex mb-3">
-                                        <span class="cat">@Html.DisplayFor(modelItem => item.Model)</span>   
-                                    </div>
-                                    <p class="d-flex mb-0 d-block">
-                                        <a asp-controller="Reservations" asp-action="Create" class="btn btn-primary py-2 mr-1">Book now</a>
-                                        <a asp-action="Details" asp-controller="Cars" asp-route-id="@item.Id" class="btn btn-secondary py-2 ml-1">Details</a>
-                                    </p>
+                {
+                    <div class="col-md-4">
+                        <div class="car-wrap rounded ftco-animate fadeInUp ftco-animated">
+                            <div class="img rounded d-flex align-items-end" style="background-image: url(images/car-1.jpg);"></div>
+                            <div class="text">
+                                <h2 class="mb-0">@Html.DisplayFor(modelItem => item.Maker)</h2>
+                                <div class="d-flex mb-3">
+                                    <span class="cat">@Html.DisplayFor(modelItem => item.Model)</span>
                                 </div>
+                                <p class="d-flex mb-0 d-block">
+                                    <a asp-controller="Reservations" asp-action="Create" class="btn btn-primary py-2 mr-1">Rent a car</a>
+                                    <a asp-controller="Cars" asp-action="Details"  asp-route-id="@item.Id" class="btn btn-secondary py-2 ml-1">Details</a>
+                                    <a asp-controller="Cars" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary py-2 mr-1">Edit</a>
+                                    <a asp-action="Delete" asp-controller="Cars" asp-route-id="@item.Id" class="btn btn-secondary py-2 ml-1">Delete</a>
+                                </p>
                             </div>
                         </div>
                     </div>
-                  }
+                }
             </div>
-        </section>
+        </div>
+    </section>
     </body>
 </html>
 @*
