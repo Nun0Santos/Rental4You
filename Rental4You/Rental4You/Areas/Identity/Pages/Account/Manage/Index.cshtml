@@ -1,12 +1,14 @@
 ﻿@page
 @model IndexModel
 @inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 @{
     ViewData["Title"] = "Profile";
     ViewData["ActivePage"] = ManageNavPages.Index;
 }
 
 <body>
+    <partial name="_StatusMessage" for="StatusMessage" />
     <section class="ftco-section ftco-no-pt">
         <div class="container">
             <div class="row justify-content-center">
@@ -20,16 +22,21 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-floating">
                 <div>
-                    <img id="MyAvatar" class="img-thumbnail" src="~/images/user.png" width="400" height="400"/>
+                    @if(Model.Input.img == null){
+                        <img id="MyAvatar" class="img-thumbnail" src="~/images/user.png" width="400" height="400"/>
+                    }else{
+                        <img id="MyAvatar" class="img-thumbnail" src="@Model.Input.img" width="400" height="400"/>
+                    }
                 </div>
                 <div>
                     <label>Escolha uma imagem de perfil:</label>
-                    <input type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg" class="form-control" onchange="document.getElementById('MyAvatar').src = window.URL.createObjectURL(this.files[0])"/>
-                    <span class="text-danger"></span>
+                    <input type="file" asp-for="Input.img" accept=".png,.jpg,.jpeg,image/png,image/jpeg" class="form-control"
+                        onchange="document.getElementById('MyAvatar').src = window.URL.createObjectURL(this.files[0])" name="img"/>
+                    <span asp-validation-for="Input.img" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-floating">
-                <label asp-for="Username" class="form-label"></label>
+                <label asp-for="Username" class="form-label" ></label>
                 <input asp-for="Username" class="form-control" disabled/>
             </div>           
             <div class="form-floating">

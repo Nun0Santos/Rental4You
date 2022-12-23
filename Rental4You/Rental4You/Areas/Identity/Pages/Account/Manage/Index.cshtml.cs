@@ -84,16 +84,11 @@ namespace Rental4You.Areas.Identity.Pages.Account.Manage
 
             if (Directory.Exists("wwwroot\\uploads\\users\\" + user.Id))
             {
-                var files = Directory.EnumerateFileSystemEntries("wwwroot\\uploads\\users\\" + user.Id);
+                List<string> files = Directory.EnumerateFiles("wwwroot\\uploads\\users\\" + user.Id).ToList();
 
-
-                if (files.Any())
+                if (files.Count > 0)
                 {
-                    var profileIMG = "";
-                    foreach (string file in files)
-                    {
-                        profileIMG = file;
-                    }
+                    string image = files[0].Replace("wwwroot", "");
 
                     Input = new InputModel
                     {
@@ -102,33 +97,23 @@ namespace Rental4You.Areas.Identity.Pages.Account.Manage
                         Surname = user.Surname,
                         TaxNumber = user.TaxNumber,
                         Email = user.Email,
-                        img = profileIMG
+                        img = image
                     };
-                }
-                else
-                {
-                    Input = new InputModel
-                    {
-                        PhoneNumber = phoneNumber,
-                        Name = user.Name,
-                        Surname = user.Surname,
-                        TaxNumber = user.TaxNumber,
-                        Email = user.Email
-                    };
-                }
-            }
-            else
-            {
-                Input = new InputModel
-                {
-                    PhoneNumber = phoneNumber,
-                    Name = user.Name,
-                    Surname = user.Surname,
-                    TaxNumber = user.TaxNumber,
-                    Email = user.Email,
 
-                };
+                    return;
+                }
             }
+
+
+            Input = new InputModel
+            {
+                PhoneNumber = phoneNumber,
+                Name = user.Name,
+                Surname = user.Surname,
+                TaxNumber = user.TaxNumber,
+                Email = user.Email,
+                img = null
+            };
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -168,43 +153,59 @@ namespace Rental4You.Areas.Identity.Pages.Account.Manage
                 }
             }
 
-            await _signInManager.RefreshSignInAsync(user);
+            if (Input.Name != user.Name)
+            {
+                user.Name = Input.Name;
+            }
 
-            if (!Directory.Exists("wwwroot\\uploads"))
+            if (Input.Surname != user.Surname)
             {
-                Directory.CreateDirectory("wwwroot\\uploads");
+                user.Surname = Input.Surname;
             }
-            if (!Directory.Exists("wwwroot\\uploads\\users"))
-            {
-                Directory.CreateDirectory("wwwroot\\uploads\\users");
-            }
-            if (!Directory.Exists("wwwroot\\uploads\\users\\" + user.Id))
-            {
-                Directory.CreateDirectory("wwwroot\\uploads\\users\\" + user.Id);
-            }
-            if (Directory.EnumerateFileSystemEntries("wwwroot\\uploads\\users\\" + user.Id).Any())
-            {
-                DirectoryInfo di = new DirectoryInfo("wwwroot\\uploads\\users\\" + user.Id);
 
-                foreach (FileInfo file in di.GetFiles())
-                {
-                    file.Delete();
-                }
+            if (Input.TaxNumber != user.TaxNumber)
+            {
+                user.TaxNumber = Input.TaxNumber;
             }
+
 
             if (img != null)
             {
-                var fs = System.IO.File.Create("wwwroot\\uploads\\users\\" + user.Id + "\\test.png");
+                if (!Directory.Exists("wwwroot\\uploads"))
+                {
+                    Directory.CreateDirectory("wwwroot\\uploads");
+                }
+                if (!Directory.Exists("wwwroot\\uploads\\users"))
+                {
+                    Directory.CreateDirectory("wwwroot\\uploads\\users");
+                }
+                if (!Directory.Exists("wwwroot\\uploads\\users\\" + user.Id))
+                {
+                    Directory.CreateDirectory("wwwroot\\uploads\\users\\" + user.Id);
+                }
+                if (Directory.EnumerateFiles("wwwroot\\uploads\\users\\" + user.Id).Any())
+                {
+                    DirectoryInfo di = new DirectoryInfo("wwwroot\\uploads\\users\\" + user.Id);
+
+                    foreach (FileInfo file in di.GetFiles())
+                    {
+                        file.Delete();
+                    }
+                }
+
+                var fs = System.IO.File.Create("wwwroot\\uploads\\users\\" + user.Id + "\\" + img.FileName);
                 using (var stream = new MemoryStream())
                 {
                     await img.CopyToAsync(stream);
                     stream.WriteTo(fs);
                 }
                 fs.Close();
+                await _userManager.UpdateAsync(user);
                 StatusMessage = "Your profile has been updated";
                 return RedirectToPage();
             }
 
+            await _userManager.UpdateAsync(user);
             StatusMessage = "Your profile has NOT been updated";
             return RedirectToPage();
         }
