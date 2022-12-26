@@ -38,7 +38,20 @@ Layout = "~/Views/Shared/_Layout2.cshtml";
                 {
                     <div class="col-md-4">
                         <div class="car-wrap rounded ftco-animate fadeInUp ftco-animated">
-                            <div class="img rounded d-flex align-items-end" style="background-image: url(images/car-1.jpg);"></div>
+                            <div>
+                                @if (Directory.Exists("wwwroot\\uploads\\cars\\" + item.Id))
+                                {
+                                    List<string> imgPaths = new List<string>();
+                                    imgPaths = Directory.EnumerateFiles("wwwroot\\uploads\\cars\\" + item.Id).ToList();
+                                    string img = imgPaths[0];
+                                    img = img.Replace("wwwroot", "");
+                                    <img src="@img" class="img rounded d-flex align-items-end"/>
+                                }
+                                else
+                                {
+                                    <img src="~/images/car-1.jpg" class="img rounded d-flex align-items-end"/>
+                                }
+                            </div>
                             <div class="text">
                                 <h2 class="mb-0">@Html.DisplayFor(modelItem => item.Maker)</h2>
                                 <div class="d-flex mb-3">

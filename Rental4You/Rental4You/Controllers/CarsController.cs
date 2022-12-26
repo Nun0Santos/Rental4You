@@ -114,8 +114,11 @@ namespace Rental4You.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Maker,Model,Type,Transmission,Seats,Year,LicensePlate,Location,Km,state")] Car car)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Maker,Model,Type,Transmission,Seats,Year,LicensePlate,Location,Km,state, price, fuel")] Car car, [FromForm]List<IFormFile> files)
         {
+            ModelState.Remove(nameof(car.company));
+            ModelState.Remove(nameof(car.companyId));
+
             if (id != car.Id)
             {
                 return NotFound();
@@ -127,6 +130,29 @@ namespace Rental4You.Controllers
                 {
                     _context.Update(car);
                     await _context.SaveChangesAsync();
+                    if (!Directory.Exists("wwwroot\\uploads"))
+                    {
+                        Directory.CreateDirectory("wwwroot\\uploads");
+                    }
+                    if (!Directory.Exists("wwwroot\\uploads\\cars"))
+                    {
+                        Directory.CreateDirectory("wwwroot\\uploads\\cars");
+                    }
+                    if (!Directory.Exists("wwwroot\\uploads\\cars\\" + car.Id))
+                    {
+                        Directory.CreateDirectory("wwwroot\\uploads\\cars\\" + car.Id);
+                    }
+
+                    foreach (IFormFile file in files)
+                    {
+                        var fs = System.IO.File.Create("wwwroot\\uploads\\cars\\" + car.Id + "\\" + file.FileName);
+                        using (var stream = new MemoryStream())
+                        {
+                            await file.CopyToAsync(stream);
+                            stream.WriteTo(fs);
+                        }
+                        fs.Close();
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
