@@ -207,6 +207,12 @@ namespace Rental4You.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> deleteImage(int id, string imgPath)
+        {
+            System.IO.File.Delete("wwwroot\\" + imgPath);
+            return RedirectToAction(nameof(Edit), new { id = id });
+        }
+
         private bool CarExists(int id)
         {
             return _context.cars.Any(e => e.Id == id);

@@ -92,7 +92,35 @@
     </div>
 </div>
 
-<div>
+<div style="margin-left: 25px">
     <a asp-action="Index">Back to List</a>
+</div>
+
+<hr />
+
+<h4>Delete Images</h4>
+<p>Click on top of the image you want to delete</p>
+<div class="row" style="margin-left: 20px">
+    @if (Directory.Exists("wwwroot\\uploads\\cars\\" + Model.Id))
+    {
+        List<string> imgPaths = new List<string>();
+        imgPaths = Directory.EnumerateFiles("wwwroot\\uploads\\cars\\" + Model.Id).ToList();
+        List<string> img = new List<string>();
+
+        foreach (var f in imgPaths)
+        {
+            img.Add(f.Replace("wwwroot", ""));
+        }
+
+        foreach(var i in img){
+            <div class="col-4">
+                <div class="row"> 
+                    <a asp-action="deleteImage" asp-route-id="@Model.Id" asp-route-imgPath="@i">
+                        <img src="@i" style="display:block;margin-left: auto;margin-right: auto; width: 100%; height: 100%; padding: 10px" onclick="return confirm('Tem a certeza que quer apagar esta image?')"/>
+                    </a>
+                </div>
+            </div>
+        }
+    }
 </div>
 

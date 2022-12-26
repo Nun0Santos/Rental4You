@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "SYdhTw2O93sEUWnDOUkNBoDIe21uGrMb1Xdki6RGiZo=",
+  "Hash": "t6a+ZSmMaOp7sd0hf8UmU890NzPJCJLpuKcU55fBOXI=",
   "Source": "Rental4You",
   "BasePath": "_content/Rental4You",
   "Mode": "Default",
@@ -5406,12 +5406,12 @@
       "OriginalItemSpec": "wwwroot\\scss\\style.scss"
     },
     {
-      "Identity": "C:\\Users\\Rafael\\Desktop\\GitHub\\Rental4You\\Rental4You\\Rental4You\\wwwroot\\uploads\\cars\\2\\ISEC.png",
+      "Identity": "C:\\Users\\Rafael\\Desktop\\GitHub\\Rental4You\\Rental4You\\Rental4You\\wwwroot\\uploads\\cars\\2\\mercedes-cls.jpg",
       "SourceId": "Rental4You",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\Rafael\\Desktop\\GitHub\\Rental4You\\Rental4You\\Rental4You\\wwwroot\\",
       "BasePath": "_content/Rental4You",
-      "RelativePath": "uploads/cars/2/ISEC.png",
+      "RelativePath": "uploads/cars/2/mercedes-cls.jpg",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -5420,7 +5420,24 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\uploads\\cars\\2\\ISEC.png"
+      "OriginalItemSpec": "wwwroot\\uploads\\cars\\2\\mercedes-cls.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\Rafael\\Desktop\\GitHub\\Rental4You\\Rental4You\\Rental4You\\wwwroot\\uploads\\cars\\3\\bmw_x6.png",
+      "SourceId": "Rental4You",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Rafael\\Desktop\\GitHub\\Rental4You\\Rental4You\\Rental4You\\wwwroot\\",
+      "BasePath": "_content/Rental4You",
+      "RelativePath": "uploads/cars/3/bmw_x6.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\cars\\3\\bmw_x6.png"
     },
     {
       "Identity": "C:\\Users\\Rafael\\Desktop\\GitHub\\Rental4You\\Rental4You\\Rental4You\\wwwroot\\uploads\\cars\\7\\2022-ford-gt-lm-edition.jpg",
