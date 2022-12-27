@@ -276,3 +276,4 @@ C:\Users\Rafael\Desktop\GitHub\Rental4You\Rental4You\Rental4You\obj\Debug\net6.0
 C:\Users\Rafael\Desktop\GitHub\Rental4You\Rental4You\Rental4You\obj\Debug\net6.0\Rental4You.pdb
 C:\Users\Rafael\Desktop\GitHub\Rental4You\Rental4You\Rental4You\obj\Debug\net6.0\Rental4You.genruntimeconfig.cache
 C:\Users\Rafael\Desktop\GitHub\Rental4You\Rental4You\Rental4You\obj\Debug\net6.0\ref\Rental4You.dll
+C:\Users\Rafael\Desktop\GitHub\Rental4You\Rental4You\Rental4You\bin\Debug\net6.0\System.Reflection.MetadataLoadContext.dll
