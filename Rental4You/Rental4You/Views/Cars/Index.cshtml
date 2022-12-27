@@ -52,16 +52,25 @@ Layout = "~/Views/Shared/_Layout2.cshtml";
                                     <img src="~/images/car-1.jpg" class="img rounded d-flex align-items-end"/>
                                 }
                             </div>
-                            <div class="text">
-                                <h2 class="mb-0">@Html.DisplayFor(modelItem => item.Maker)</h2>
-                                <div class="d-flex mb-3">
-                                    <span class="cat">@Html.DisplayFor(modelItem => item.Model)</span>
+                            <div class="text row">
+                                <div class="col">
+                                    <h2 class="mb-0">@Html.DisplayFor(modelItem => item.Maker)</h2>
+                                    <div class="d-flex mb-3">
+                                        <span class="cat">@Html.DisplayFor(modelItem => item.Model)</span>
+                                    </div>
                                 </div>
+                                <div class="col">
+                                    <h2 class="mb-0">@Html.DisplayFor(modelItem => item.Company.Name)</h2>
+                                    <div class="d-flex mb-3">
+                                        <span class="cat">@Html.DisplayFor(modelItem => item.Company.Rating)</span>
+                                    </div>
+                                </div>
+
                                 <p class="d-flex mb-0 d-block">
-                                    <a asp-controller="Reservations" asp-action="Create" class="btn btn-primary py-2 mr-1">Rent a car</a>
-                                    <a asp-controller="Cars" asp-action="Details"  asp-route-id="@item.Id" class="btn btn-secondary py-2 ml-1">Details</a>
-                                    <a asp-controller="Cars" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary py-2 mr-1">Edit</a>
-                                    <a asp-action="Delete" asp-controller="Cars" asp-route-id="@item.Id" class="btn btn-secondary py-2 ml-1">Delete</a>
+                                    <a asp-controller="Reservations" asp-action="Create" class="btn btn-primary">Rent</a>
+                                    <a asp-controller="Cars" asp-action="Details"  asp-route-id="@item.Id" class="btn btn-secondary">Details</a>
+                                    <a asp-controller="Cars" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a>
+                                    <a asp-action="Delete" asp-controller="Cars" asp-route-id="@item.Id" class="btn btn-secondary">Delete</a>
                                 </p>
                             </div>
                         </div>

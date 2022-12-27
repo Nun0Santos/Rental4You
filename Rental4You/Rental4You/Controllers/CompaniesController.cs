@@ -56,6 +56,8 @@ namespace Rental4You.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Rating")] Company company)
         {
+            ModelState.Remove(nameof(company.Employees));
+
             if (ModelState.IsValid)
             {
                 _context.Add(company);
@@ -92,6 +94,8 @@ namespace Rental4You.Controllers
             {
                 return NotFound();
             }
+
+            ModelState.Remove(nameof(company.Employees));
 
             if (ModelState.IsValid)
             {

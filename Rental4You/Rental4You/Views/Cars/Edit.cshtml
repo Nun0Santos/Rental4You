@@ -78,6 +78,16 @@
             <input asp-for="fuel" class="form-control" />
             <span asp-validation-for="fuel" class="text-danger"></span>
         </div>
+        <div class="form-group">
+                <label asp-for="CompanyId" class="control-label"></label>
+                
+                <select asp-for="CompanyId"
+                        asp-items="ViewBag.Companies"
+                        class="form-control">
+                </select>
+
+                <span asp-validation-for="CompanyId" class="text-danger"></span>
+         </div>
         <div>
             <label >Car images:</label>
             <input type="file" multiple accept=".png,.jpg,.jpeg,image/png,image/jpeg" class="form-control" name="files"/>
@@ -114,11 +124,9 @@
 
         foreach(var i in img){
             <div class="col-4">
-                <div class="row"> 
-                    <a asp-action="deleteImage" asp-route-id="@Model.Id" asp-route-imgPath="@i">
-                        <img src="@i" style="display:block;margin-left: auto;margin-right: auto; width: 100%; height: 100%; padding: 10px" onclick="return confirm('Tem a certeza que quer apagar esta image?')"/>
-                    </a>
-                </div>
+                <a asp-action="deleteImage" asp-route-id="@Model.Id" asp-route-imgPath="@i">
+                    <img src="@i" style="display:block;margin-left: auto;margin-right: auto; width: 100%; height: 100%; padding: 10px" onclick="return confirm('Tem a certeza que quer apagar esta image?')"/>
+                </a>
             </div>
         }
     }

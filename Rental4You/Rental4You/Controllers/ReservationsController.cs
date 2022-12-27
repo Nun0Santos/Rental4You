@@ -50,9 +50,7 @@ namespace Rental4You.Controllers
         // GET: Reservations/Create
         public IActionResult Create()
         {
-            ViewData["carId"] = new SelectList(_context.cars, "Id", "Id");
-            ViewData["deliveryId"] = new SelectList(_context.deliveries, "Id", "Id");
-         
+            ViewData["carId"] = new SelectList(_context.cars.ToList(), "Id", "Maker", "Model");         
             return View();
         }
 

@@ -34,8 +34,8 @@ namespace Rental4You.Models
         public float price { get; set; }
         [Display(Name = "Fuel", Prompt = "Enter the type of fuel of the car")]
         public string fuel { get; set; }
-        public Company company { get; set; } 
-        public int companyId { get; set; }
+        public Company Company { get; set; } 
+        public int CompanyId { get; set; }
 
     }
 }

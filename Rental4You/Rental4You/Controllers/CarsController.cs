@@ -49,6 +49,8 @@ namespace Rental4You.Controllers
         // GET: Cars/Create
         public IActionResult Create()
         {
+            ViewData["Companies"] = new SelectList(_context.Company.ToList(), "Id", "Name");
+
             return View();
         }
 
@@ -57,10 +59,10 @@ namespace Rental4You.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Maker,Model,Type,Transmission,Seats,Year,LicensePlate,Location,Km,state,price,fuel")] Car car, [FromForm] List<IFormFile> files)
+        public async Task<IActionResult> Create([Bind("Id,Maker,Model,Type,Transmission,Seats,Year,LicensePlate,Location,Km,state,price,fuel, CompanyId")] Car car, [FromForm] List<IFormFile> files)
         {
-            ModelState.Remove(nameof(car.company));
-            ModelState.Remove(nameof(car.companyId));
+            ViewData["Companies"] = new SelectList(_context.Company.ToList(), "Id", "Name");
+            ModelState.Remove(nameof(car.Company));
 
             if (ModelState.IsValid)
             {
@@ -106,6 +108,9 @@ namespace Rental4You.Controllers
             {
                 return NotFound();
             }
+
+            ViewData["Companies"] = new SelectList(_context.Company.ToList(), "Id", "Name");
+
             return View(car);
         }
 
@@ -114,10 +119,11 @@ namespace Rental4You.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Maker,Model,Type,Transmission,Seats,Year,LicensePlate,Location,Km,state, price, fuel")] Car car, [FromForm]List<IFormFile> files)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Maker,Model,Type,Transmission,Seats,Year,LicensePlate,Location,Km,state, price, fuel, CompanyId")] Car car, [FromForm]List<IFormFile> files)
         {
-            ModelState.Remove(nameof(car.company));
-            ModelState.Remove(nameof(car.companyId));
+            ViewData["Companies"] = new SelectList(_context.Company.ToList(), "Id", "Name");
+
+            ModelState.Remove(nameof(car.Company));
 
             if (id != car.Id)
             {
