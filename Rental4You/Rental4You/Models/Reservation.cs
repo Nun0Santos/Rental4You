@@ -11,5 +11,6 @@
         public int deliveryId { get; set; } //fk
         public float price { get; set; }
         public ApplicationUser employee { get; set; }
+        public bool confirmed { get; set; }
     }
 }

@@ -5,14 +5,10 @@ ViewData["Title"] = "Index";
 Layout = "~/Views/Shared/_Layout2.cshtml";
 
 }
-
-@*<h1>Ours Cars</h1>
-<a asp-action="Create">Create New</a>*@
-
 <html>
     <body>
    
-        <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('images/bg_3.jpg');" data-stellar-background-ratio="0.5">
+        <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('/images/bg_3.jpg');" data-stellar-background-ratio="0.5">
             <div class="overlay"></div>
             <div class="container">
                 <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
@@ -24,19 +20,29 @@ Layout = "~/Views/Shared/_Layout2.cshtml";
             </div>
         </section>
     <section class="ftco-section bg-light">
-        <form asp-action="GetProducts" method="get" enctype="multipart/form-data">
-            <label for="sort">Option:</label>
-            <select id="sort" name="sort">
-                <option value="ascending">Preço: Crescente</option>
-                <option value="descending">Preço: Decrescente</option>
-            </select>
-            <input name="sort" asp-controller="Cars" asp-action="GetProducts" type="submit" value="Pesquisar" />
-        </form>
-        <div class="container">
+        <div class="row" style="margin-left: 20px">
+            <form asp-action="GetProducts" method="get" >
+                <label for="sort">Preço:</label>
+                <select id="sort" name="sort">
+                    <option value="ascending">Ascending</option>
+                    <option value="descending">Descending</option>
+                </select>
+                <input name="btnSubmeter" asp-controller="Cars" asp-action="GetProducts" type="submit" value="Pesquisar" />
+            </form>
+            <form asp-action="OrderByRating" method="get" style="margin-left: 10px">
+                <label for="sort">Company rating: </label>
+                <select name="requirement">
+                    <option value="ascending">Ascending</option>
+                    <option value="descending">Descending</option>
+                </select>
+                <input name="btnSubmeter" asp-controller="Cars" asp-action="OrderByRating" type="submit" value="Pesquisar" />
+            </form>
+        </div>
+        <div class="container" style="margin-top: 20px">
             <div class="row">
                 @foreach (var item in Model)
                 {
-                    <div class="col-md-4">
+                    <div class="col-4">
                         <div class="car-wrap rounded ftco-animate fadeInUp ftco-animated">
                             <div>
                                 @if (Directory.Exists("wwwroot\\uploads\\cars\\" + item.Id))
@@ -54,23 +60,31 @@ Layout = "~/Views/Shared/_Layout2.cshtml";
                             </div>
                             <div class="text row">
                                 <div class="col">
-                                    <h2 class="mb-0">@Html.DisplayFor(modelItem => item.Maker)</h2>
+                                    <h6 class="mb-0">@Html.DisplayFor(modelItem => item.Maker)</h6>
                                     <div class="d-flex mb-3">
                                         <span class="cat">@Html.DisplayFor(modelItem => item.Model)</span>
                                     </div>
                                 </div>
                                 <div class="col">
-                                    <h2 class="mb-0">@Html.DisplayFor(modelItem => item.Company.Name)</h2>
+                                    <h6 class="mb-0">@Html.DisplayFor(modelItem => item.Company.Name)</h6>
                                     <div class="d-flex mb-3">
                                         <span class="cat">@Html.DisplayFor(modelItem => item.Company.Rating)</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <h6 class="mb-0">@Html.DisplayFor(modelItem => item.price)<span class=" icon-euro_symbol"></span></h6>
+                                    <div class="d-flex mb-3">
+                                        <span class="cat">per day</span>
                                     </div>
                                 </div>
 
                                 <p class="d-flex mb-0 d-block">
                                     <a asp-controller="Reservations" asp-action="Create" class="btn btn-primary">Rent</a>
                                     <a asp-controller="Cars" asp-action="Details"  asp-route-id="@item.Id" class="btn btn-secondary">Details</a>
-                                    <a asp-controller="Cars" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a>
-                                    <a asp-action="Delete" asp-controller="Cars" asp-route-id="@item.Id" class="btn btn-secondary">Delete</a>
+                                    @if(User.IsInRole("Admin") || User.IsInRole("Manager") || User.IsInRole("Employee")){
+                                        <a asp-controller="Cars" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a>
+                                        <a asp-action="Delete" asp-controller="Cars" asp-route-id="@item.Id" class="btn btn-secondary">Delete</a>
+                                    }
                                 </p>
                             </div>
                         </div>

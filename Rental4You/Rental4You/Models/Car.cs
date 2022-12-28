@@ -36,6 +36,5 @@ namespace Rental4You.Models
         public string fuel { get; set; }
         public Company Company { get; set; } 
         public int CompanyId { get; set; }
-
     }
 }

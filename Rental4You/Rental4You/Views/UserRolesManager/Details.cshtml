@@ -13,7 +13,6 @@
             <span class="badge bg-dark text-white">@ViewBag.UserName</span> Add/remove roles
         </div>
         <div class="card-body">
-            <h5>Usando o ciclo para contruit o [] de roles</h5>
             @for (int i = 0 ; i < Model.Count; i++){
                 <div class="form-check m-1">
                     <input type="hidden" asp-for="@Model[i].RoleId"/>
@@ -29,8 +28,6 @@
                 <input type="submit" value="Update" class="btn btn-primary" style="width:auto"/>
                 <a asp-action="Index" class="btn btn-primary" style="width:auto">Cancel</a>
             </div>
-
-        </input>
     </div>
     </div>
 </form>

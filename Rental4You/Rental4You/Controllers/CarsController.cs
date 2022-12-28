@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -24,8 +25,7 @@ namespace Rental4You.Controllers
         // GET: Cars
         public async Task<IActionResult> Index()
         {
-
-            return View(await _context.cars.ToListAsync());
+            return View(await _context.cars.Include(c => c.Company).ToListAsync());
         }
 
         // GET: Cars/Details/5
@@ -47,6 +47,7 @@ namespace Rental4You.Controllers
         }
 
         // GET: Cars/Create
+        [Authorize(Roles = "Admin, Employee, Manager")]
         public IActionResult Create()
         {
             ViewData["Companies"] = new SelectList(_context.Company.ToList(), "Id", "Name");
@@ -59,6 +60,7 @@ namespace Rental4You.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Employee, Manager")]
         public async Task<IActionResult> Create([Bind("Id,Maker,Model,Type,Transmission,Seats,Year,LicensePlate,Location,Km,state,price,fuel, CompanyId")] Car car, [FromForm] List<IFormFile> files)
         {
             ViewData["Companies"] = new SelectList(_context.Company.ToList(), "Id", "Name");
@@ -96,6 +98,7 @@ namespace Rental4You.Controllers
         }
 
         // GET: Cars/Edit/5
+        [Authorize(Roles = "Admin, Employee, Manager")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.cars == null)
@@ -119,6 +122,7 @@ namespace Rental4You.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Employee, Manager")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Maker,Model,Type,Transmission,Seats,Year,LicensePlate,Location,Km,state, price, fuel, CompanyId")] Car car, [FromForm]List<IFormFile> files)
         {
             ViewData["Companies"] = new SelectList(_context.Company.ToList(), "Id", "Name");
@@ -278,24 +282,27 @@ namespace Rental4You.Controllers
 
         //    return View(searchCar);
         //}
-        public ActionResult GetProducts([FromForm] string sort)
+        public ActionResult GetProducts(string sort)
         {
             //List<Car> products = GetProducts();
-            List<Car> cars = new List<Car>();
+            //List<Car> cars = new List<Car>();
+            var carlist = _context.cars;
 
             if (sort == "ascending")
             {
                 // Ordena a lista de produtos por preço crescente
-                SearchCarViewModel sortedProductsView = new SearchCarViewModel();
-                var sortedProductsGrowing = cars.OrderBy(p => p.price);
-                return View(sortedProductsView);
+                // SearchCarViewModel sortedProductsView = new SearchCarViewModel();
+                var sortedProductsGrowing = carlist.OrderBy(p => p.price);
+                return View("Index", sortedProductsGrowing.Include(c => c.Company));
             }
             else if (sort == "descending")
             {
                 // Ordena a lista de produtos por preço decrescente
-                SearchCarViewModel sortedProductsView = new SearchCarViewModel();
-                var sortedProductsDescending = cars.OrderByDescending(p => p.price);
-                return View(sortedProductsView);
+                //SearchCarViewModel sortedProductsView = new SearchCarViewModel();
+                var sortedProductsDescending = carlist.OrderByDescending(p => p.price);
+                return View("Index", sortedProductsDescending.Include(c => c.Company));
+                //return RedirectToAction(nameof(Details), new { id = id});
+
             }
             else
             {
@@ -303,6 +310,25 @@ namespace Rental4You.Controllers
                 return RedirectToAction(nameof(Index));
 
             }
+        }
+
+        public ActionResult OrderByRating(string requirement)
+        {
+            var carlist = _context.cars.Include(c => c.Company);
+
+            if (requirement == "ascending")
+            {
+                var list = carlist.OrderBy(c => c.Company.Rating).Include(c => c.Company);
+                return View("Index", list);
+            }
+
+            if (requirement == "descending")
+            {
+                var list = carlist.OrderByDescending(c => c.Company.Rating).Include(c => c.Company);
+                return View("Index", list);
+            }
+
+            return View("Index", carlist);
         }
     }
 
