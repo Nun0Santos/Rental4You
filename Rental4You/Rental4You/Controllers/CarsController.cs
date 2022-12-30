@@ -346,9 +346,22 @@ namespace Rental4You.Controllers
 
             return View("Index", carlist);
         }
-        public ActionResult GetCategories(string sort)
+
+        public ActionResult GetCategories(string requirement)
         {
-            return View(Index);
+            var carlist = _context.cars;
+
+            if (requirement == "sports")
+            {
+
+                return View("Index", carlist.Include(c => c.Company).Where(c => c.Type == "sport"));
+            }
+            if (requirement == "suv")
+            {
+                return View("Index", carlist.Include(c => c.Company).Where(c => c.Type == "SUV"));
+            }
+
+            return View("Index", carlist.Include(c => c.Company));
         }
     }
 

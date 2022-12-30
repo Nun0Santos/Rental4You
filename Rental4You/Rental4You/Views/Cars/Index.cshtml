@@ -29,7 +29,8 @@ Layout = "~/Views/Shared/_Layout2.cshtml";
                 </select>
                 <input name="btnSubmeter" asp-controller="Cars" asp-action="GetProducts" type="submit" value="Pesquisar" />
             </form>
-            <form asp-action="OrderByRating" method="get" style="margin-left: 10px">
+            <div style="border-right: 1px solid #000; margin-left: 10px; margin-right: 10px"></div>
+            <form asp-action="OrderByRating" method="get">
                 <label for="sort">Company rating: </label>
                 <select name="requirement">
                     <option value="ascending">Ascending</option>
@@ -37,17 +38,18 @@ Layout = "~/Views/Shared/_Layout2.cshtml";
                 </select>
                 <input name="btnSubmeter" asp-controller="Cars" asp-action="OrderByRating" type="submit" value="Pesquisar" />
             </form>
+            <div style="border-right: 1px solid #000; margin-left: 10px; margin-right: 10px"></div>
+            <form asp-action="GetCategories" method="get">
+                <label for="sort">Car category: </label>
+                <select name="requirement">
+                    <option value="all">All cars</option>
+                    <option value="sports">Sports</option>
+                    <option value="suv">SUV</option>
+                </select>
+                <input name="btnSubmeter" asp-controller="Cars" asp-action="GetCategories" type="submit" value="Pesquisar" />
+            </form>
         </div>
         <div class="container" style="margin-top: 20px">
-        @*<form asp-action="GetCategories" method="get">
-            <label for="sort">Option:</label>
-            <label asp-for="Type" class="control-label"></label>
-            <select asp-for="Type"
-                    asp-items="ViewBag.ListTypes"
-                    class="form-control">
-            </select>
-            <input name="btnSubmeter" asp-controller="Cars" asp-action="GetCategories" type="submit" value="Pesquisar" />
-        </form>*@
             <div class="row">
                 @foreach (var item in Model)
                 {
