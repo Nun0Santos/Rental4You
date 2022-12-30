@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Rental4You.Data;
 
@@ -11,9 +12,10 @@ using Rental4You.Data;
 namespace Rental4You.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221224123404_updateCompany")]
+    partial class updateCompany
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -302,7 +304,7 @@ namespace Rental4You.Migrations
 
                     b.HasIndex("companyId");
 
-                    b.ToTable("cars", (string)null);
+                    b.ToTable("cars");
                 });
 
             modelBuilder.Entity("Rental4You.Models.Company", b =>
@@ -322,7 +324,7 @@ namespace Rental4You.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Company", (string)null);
+                    b.ToTable("Company");
                 });
 
             modelBuilder.Entity("Rental4You.Models.Delivery", b =>
@@ -359,7 +361,7 @@ namespace Rental4You.Migrations
 
                     b.HasIndex("employeeId");
 
-                    b.ToTable("deliveries", (string)null);
+                    b.ToTable("deliveries");
                 });
 
             modelBuilder.Entity("Rental4You.Models.Reservation", b =>
@@ -396,7 +398,7 @@ namespace Rental4You.Migrations
 
                     b.HasIndex("employeeId");
 
-                    b.ToTable("reservations", (string)null);
+                    b.ToTable("reservations");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

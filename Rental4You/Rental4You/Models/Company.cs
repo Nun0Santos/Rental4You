@@ -1,14 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Rental4You.Models
+﻿namespace Rental4You.Models
 {
     public class Company
     {
         public int Id { get; set; }
-        [Display(Name = "Company")]
         public string Name { get; set; }
-        public int Rating { get; set; }
-
+        public int  Rating { get; set; } // 0-5
         public List<ApplicationUser> Employees { get; set; } //todos os funcionarios desta empresa
     }
 }

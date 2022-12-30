@@ -230,28 +230,44 @@ namespace Rental4You.Controllers
         public async Task<IActionResult> Search([Bind("PickupLocation,VehicleType,PickupDate,ReturnDate")] SearchCarViewModel search)
         {
             SearchCarViewModel searchCar = new SearchCarViewModel();
-       
-            if (string.IsNullOrWhiteSpace(search.PickupLocation))
-                searchCar.ListOfCars = await _context.cars.ToListAsync();
-                if (string.IsNullOrWhiteSpace(search.VehicleType))
-                    searchCar.ListOfCars = await _context.cars.ToListAsync();
-                //    if (DateTime.MinValue(search.PickupDate))
-                //        searchCar.ListOfCars = await _context.cars.ToListAsync();
-                //        if (DateTime.MinValue(search.ReturnDate))
-                //            searchCar.ListOfCars = await _context.cars.ToListAsync();
 
-            else
+            if (string.IsNullOrWhiteSpace(search.VehicleType) && string.IsNullOrWhiteSpace(search.PickupLocation))
             {
-                searchCar.ListOfCars = await _context.cars.
-                    Where(c => c.Location.Contains(search.PickupLocation) 
-                         ).ToListAsync();
-
-                searchCar.TextToSearch = search.PickupLocation;
+                searchCar.ListOfCars = await _context.cars.ToListAsync();
+                return View(searchCar);
             }
 
+            if (string.IsNullOrWhiteSpace(search.PickupLocation))
+            {
+                searchCar.ListOfCars = await _context.cars.
+                    Where(c => c.Type.Contains(search.VehicleType)
+                         ).ToListAsync();
 
+                searchCar.TextToSearch = search.VehicleType;
+                searchCar.NumberOfResults = searchCar.ListOfCars.Count();
+                return View(searchCar);
+
+            }
+
+            if (string.IsNullOrWhiteSpace(search.VehicleType))
+            {
+                searchCar.ListOfCars = await _context.cars.
+                   Where(c => c.Location.Contains(search.PickupLocation)
+                        ).ToListAsync();
+
+                searchCar.TextToSearch = search.PickupLocation;
+                searchCar.NumberOfResults = searchCar.ListOfCars.Count();
+                return View(searchCar);
+
+
+            }
+            
+            searchCar.ListOfCars = await _context.cars.
+                    Where(c => c.Type.Contains(search.VehicleType) &&  c.Location.Contains(search.PickupLocation)
+                         ).ToListAsync();
+
+            searchCar.TextToSearch = search.PickupLocation + " Type: " + search.VehicleType;
             searchCar.NumberOfResults = searchCar.ListOfCars.Count();
-
 
             return View(searchCar);
 
@@ -329,6 +345,10 @@ namespace Rental4You.Controllers
             }
 
             return View("Index", carlist);
+        }
+        public ActionResult GetCategories(string sort)
+        {
+            return View(Index);
         }
     }
 

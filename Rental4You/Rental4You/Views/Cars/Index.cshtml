@@ -39,6 +39,15 @@ Layout = "~/Views/Shared/_Layout2.cshtml";
             </form>
         </div>
         <div class="container" style="margin-top: 20px">
+        @*<form asp-action="GetCategories" method="get">
+            <label for="sort">Option:</label>
+            <label asp-for="Type" class="control-label"></label>
+            <select asp-for="Type"
+                    asp-items="ViewBag.ListTypes"
+                    class="form-control">
+            </select>
+            <input name="btnSubmeter" asp-controller="Cars" asp-action="GetCategories" type="submit" value="Pesquisar" />
+        </form>*@
             <div class="row">
                 @foreach (var item in Model)
                 {
