@@ -181,6 +181,7 @@ namespace Rental4You.Controllers
         }
 
         // GET: Cars/Delete/5
+        [Authorize(Roles = "Admin, Employee, Manager")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.cars == null)
@@ -201,6 +202,7 @@ namespace Rental4You.Controllers
         // POST: Cars/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Employee, Manager")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.cars == null)
@@ -217,6 +219,7 @@ namespace Rental4You.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = "Admin, Employee, Manager")]
         public async Task<IActionResult> deleteImage(int id, string imgPath)
         {
             System.IO.File.Delete("wwwroot\\" + imgPath);
@@ -363,7 +366,30 @@ namespace Rental4You.Controllers
 
             return View("Index", carlist.Include(c => c.Company));
         }
-    }
 
+
+        public ActionResult GetFuel(string requirement)
+        {
+            var carlist = _context.cars;
+
+            if (requirement == "oil")
+            {
+                return View("Index", carlist.Include(c => c.Company).Where(c => c.fuel == "oil"));
+            }
+            if (requirement == "gas")
+            {
+                return View("Index", carlist.Include(c => c.Company).Where(c => c.fuel == "gas"));
+            }
+            if (requirement == "electric")
+            {
+                return View("Index", carlist.Include(c => c.Company).Where(c => c.fuel == "electric"));
+            }
+            if (requirement == "hybrid")
+            {
+                return View("Index", carlist.Include(c => c.Company).Where(c => c.fuel == "hybrid"));
+            }
+            return View("Index", carlist.Include(c => c.Company));
+        }
+    }
 }
   
