@@ -24,6 +24,8 @@ namespace Rental4You.Controllers
         // GET: Cars
         public async Task<IActionResult> Index()
         {
+            ViewData["ListTypes"] = new SelectList(_context.cars.ToList(), "Id","Name");
+
 
             return View(await _context.cars.ToListAsync());
         }
@@ -163,31 +165,47 @@ namespace Rental4You.Controllers
         public async Task<IActionResult> Search([Bind("PickupLocation,VehicleType,PickupDate,ReturnDate")] SearchCarViewModel search)
         {
             SearchCarViewModel searchCar = new SearchCarViewModel();
-       
-            if (string.IsNullOrWhiteSpace(search.PickupLocation))
-                searchCar.ListOfCars = await _context.cars.ToListAsync();
-                if (string.IsNullOrWhiteSpace(search.VehicleType))
-                    searchCar.ListOfCars = await _context.cars.ToListAsync();
-                //    if (DateTime.MinValue(search.PickupDate))
-                //        searchCar.ListOfCars = await _context.cars.ToListAsync();
-                //        if (DateTime.MinValue(search.ReturnDate))
-                //            searchCar.ListOfCars = await _context.cars.ToListAsync();
 
-            else
+            if (string.IsNullOrWhiteSpace(search.VehicleType) && string.IsNullOrWhiteSpace(search.PickupLocation))
             {
-                searchCar.ListOfCars = await _context.cars.
-                    Where(c => c.Location.Contains(search.PickupLocation) 
-                         ).ToListAsync();
-
-                searchCar.TextToSearch = search.PickupLocation;
+                searchCar.ListOfCars = await _context.cars.ToListAsync();
+                return View(searchCar);
             }
 
+            if (string.IsNullOrWhiteSpace(search.PickupLocation))
+            {
+                searchCar.ListOfCars = await _context.cars.
+                    Where(c => c.Type.Contains(search.VehicleType)
+                         ).ToListAsync();
 
+                searchCar.TextToSearch = search.VehicleType;
+                searchCar.NumberOfResults = searchCar.ListOfCars.Count();
+                return View(searchCar);
+
+            }
+
+            if (string.IsNullOrWhiteSpace(search.VehicleType))
+            {
+                searchCar.ListOfCars = await _context.cars.
+                   Where(c => c.Location.Contains(search.PickupLocation)
+                        ).ToListAsync();
+
+                searchCar.TextToSearch = search.PickupLocation;
+                searchCar.NumberOfResults = searchCar.ListOfCars.Count();
+                return View(searchCar);
+
+
+            }
+            
+            searchCar.ListOfCars = await _context.cars.
+                    Where(c => c.Type.Contains(search.VehicleType) &&  c.Location.Contains(search.PickupLocation)
+                         ).ToListAsync();
+
+            searchCar.TextToSearch = search.PickupLocation + " Type: " + search.VehicleType;
             searchCar.NumberOfResults = searchCar.ListOfCars.Count();
 
-
             return View(searchCar);
-
+               
         }
 
         //[HttpPost]
@@ -215,24 +233,27 @@ namespace Rental4You.Controllers
 
         //    return View(searchCar);
         //}
-        public ActionResult GetProducts([FromForm] string sort)
+        public ActionResult GetProducts(string sort)
         {
             //List<Car> products = GetProducts();
-            List<Car> cars = new List<Car>();
+            //List<Car> cars = new List<Car>();
+            var carlist = _context.cars;
 
             if (sort == "ascending")
             {
                 // Ordena a lista de produtos por preço crescente
-                SearchCarViewModel sortedProductsView = new SearchCarViewModel();
-                var sortedProductsGrowing = cars.OrderBy(p => p.price);
-                return View(sortedProductsView);
+               // SearchCarViewModel sortedProductsView = new SearchCarViewModel();
+                var sortedProductsGrowing = carlist.OrderBy(p => p.price);
+                return View("Index", sortedProductsGrowing);
             }
             else if (sort == "descending")
             {
                 // Ordena a lista de produtos por preço decrescente
-                SearchCarViewModel sortedProductsView = new SearchCarViewModel();
-                var sortedProductsDescending = cars.OrderByDescending(p => p.price);
-                return View(sortedProductsView);
+                //SearchCarViewModel sortedProductsView = new SearchCarViewModel();
+                var sortedProductsDescending = carlist.OrderByDescending(p => p.price);
+                return View("Index", sortedProductsDescending);
+                //return RedirectToAction(nameof(Details), new { id = id});
+
             }
             else
             {
@@ -240,6 +261,10 @@ namespace Rental4You.Controllers
                 return RedirectToAction(nameof(Index));
 
             }
+        }
+        public ActionResult GetCategories(string sort)
+        {
+            return View(Index);
         }
     }
 

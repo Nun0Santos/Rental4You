@@ -8,137 +8,141 @@ build_property.PlatformNeutralAssembly =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Rental4You
 build_property.RootNamespace = Rental4You
-build_property.ProjectDir = C:\Users\Rafael\Desktop\GitHub\Rental4You\Rental4You\Rental4You\
+build_property.ProjectDir = C:\Users\NunoS\Ambiente de Trabalho\GitHub\Rental4You\Rental4You\Rental4You\
 build_property.RazorLangVersion = 6.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\Rafael\Desktop\GitHub\Rental4You\Rental4You\Rental4You
+build_property.MSBuildProjectDirectory = C:\Users\NunoS\Ambiente de Trabalho\GitHub\Rental4You\Rental4You\Rental4You
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Users/Rafael/Desktop/GitHub/Rental4You/Rental4You/Rental4You/Areas/Identity/Pages/Account/Login.cshtml]
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Areas/Identity/Pages/Account/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Rafael/Desktop/GitHub/Rental4You/Rental4You/Rental4You/Areas/Identity/Pages/Account/Manage/Index.cshtml]
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Areas/Identity/Pages/Account/Manage/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxNYW5hZ2VcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Rafael/Desktop/GitHub/Rental4You/Rental4You/Rental4You/Areas/Identity/Pages/Account/Manage/_ManageNav.cshtml]
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Areas/Identity/Pages/Account/Manage/_ManageNav.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxNYW5hZ2VcX01hbmFnZU5hdi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Rafael/Desktop/GitHub/Rental4You/Rental4You/Rental4You/Areas/Identity/Pages/Account/Manage/_ViewImports.cshtml]
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Areas/Identity/Pages/Account/Manage/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxNYW5hZ2VcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Rafael/Desktop/GitHub/Rental4You/Rental4You/Rental4You/Areas/Identity/Pages/Account/Register.cshtml]
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Areas/Identity/Pages/Account/Register.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Rafael/Desktop/GitHub/Rental4You/Rental4You/Rental4You/Areas/Identity/Pages/Account/_ViewImports.cshtml]
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Areas/Identity/Pages/Account/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxfVmlld0ltcG9ydHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Rafael/Desktop/GitHub/Rental4You/Rental4You/Rental4You/Areas/Identity/Pages/_ValidationScriptsPartial.cshtml]
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Areas/Identity/Pages/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZhbGlkYXRpb25TY3JpcHRzUGFydGlhbC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Rafael/Desktop/GitHub/Rental4You/Rental4You/Rental4You/Areas/Identity/Pages/_ViewImports.cshtml]
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Areas/Identity/Pages/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Rafael/Desktop/GitHub/Rental4You/Rental4You/Rental4You/Areas/Identity/Pages/_ViewStart.cshtml]
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Areas/Identity/Pages/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Rafael/Desktop/GitHub/Rental4You/Rental4You/Rental4You/Views/Cars/Create.cshtml]
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Views/Cars/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2Fyc1xDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Rafael/Desktop/GitHub/Rental4You/Rental4You/Rental4You/Views/Cars/Delete.cshtml]
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Views/Cars/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2Fyc1xEZWxldGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Rafael/Desktop/GitHub/Rental4You/Rental4You/Rental4You/Views/Cars/Details.cshtml]
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Views/Cars/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2Fyc1xEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Rafael/Desktop/GitHub/Rental4You/Rental4You/Rental4You/Views/Cars/Edit.cshtml]
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Views/Cars/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2Fyc1xFZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Rafael/Desktop/GitHub/Rental4You/Rental4You/Rental4You/Views/Cars/Index.cshtml]
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Views/Cars/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2Fyc1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Rafael/Desktop/GitHub/Rental4You/Rental4You/Rental4You/Views/Cars/QuickSearchPartial.cshtml]
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Views/Cars/QuickSearchPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2Fyc1xRdWlja1NlYXJjaFBhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Rafael/Desktop/GitHub/Rental4You/Rental4You/Rental4You/Views/Cars/Search.cshtml]
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Views/Cars/Search.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2Fyc1xTZWFyY2guY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Rafael/Desktop/GitHub/Rental4You/Rental4You/Rental4You/Views/Home/Index.cshtml]
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Views/Home/About.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxBYm91dC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Rafael/Desktop/GitHub/Rental4You/Rental4You/Rental4You/Views/Home/Privacy.cshtml]
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Rafael/Desktop/GitHub/Rental4You/Rental4You/Rental4You/Views/Reservations/Create.cshtml]
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Views/Reservations/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVzZXJ2YXRpb25zXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Rafael/Desktop/GitHub/Rental4You/Rental4You/Rental4You/Views/Reservations/Delete.cshtml]
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Views/Reservations/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVzZXJ2YXRpb25zXERlbGV0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Rafael/Desktop/GitHub/Rental4You/Rental4You/Rental4You/Views/Reservations/Details.cshtml]
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Views/Reservations/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVzZXJ2YXRpb25zXERldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Rafael/Desktop/GitHub/Rental4You/Rental4You/Rental4You/Views/Reservations/Edit.cshtml]
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Views/Reservations/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVzZXJ2YXRpb25zXEVkaXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Rafael/Desktop/GitHub/Rental4You/Rental4You/Rental4You/Views/Reservations/Index.cshtml]
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Views/Reservations/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVzZXJ2YXRpb25zXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Rafael/Desktop/GitHub/Rental4You/Rental4You/Rental4You/Views/Shared/Error.cshtml]
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Rafael/Desktop/GitHub/Rental4You/Rental4You/Rental4You/Views/Shared/_Layout2.cshtml]
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Views/Shared/_Layout2.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQyLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Rafael/Desktop/GitHub/Rental4You/Rental4You/Rental4You/Views/Shared/_LoginPartial.cshtml]
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Views/Shared/_LoginPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Mb2dpblBhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Rafael/Desktop/GitHub/Rental4You/Rental4You/Rental4You/Views/Shared/_ValidationScriptsPartial.cshtml]
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Rafael/Desktop/GitHub/Rental4You/Rental4You/Rental4You/Views/UserRolesManager/Details.cshtml]
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Views/UserRolesManager/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclJvbGVzTWFuYWdlclxEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Rafael/Desktop/GitHub/Rental4You/Rental4You/Rental4You/Views/UserRolesManager/Index.cshtml]
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Views/UserRolesManager/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclJvbGVzTWFuYWdlclxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Rafael/Desktop/GitHub/Rental4You/Rental4You/Rental4You/Views/_ViewImports.cshtml]
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Rafael/Desktop/GitHub/Rental4You/Rental4You/Rental4You/Views/_ViewStart.cshtml]
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Rafael/Desktop/GitHub/Rental4You/Rental4You/Rental4You/Views/Shared/_Layout.cshtml]
+[C:/Users/NunoS/Ambiente de Trabalho/GitHub/Rental4You/Rental4You/Rental4You/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-5q1w9zo7h2

@@ -12,7 +12,7 @@ Layout = "~/Views/Shared/_Layout2.cshtml";
 <html>
     <body>
    
-        <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('images/bg_3.jpg');" data-stellar-background-ratio="0.5">
+        <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('/images/bg_3.jpg');" data-stellar-background-ratio="0.5">
             <div class="overlay"></div>
             <div class="container">
                 <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
@@ -24,21 +24,30 @@ Layout = "~/Views/Shared/_Layout2.cshtml";
             </div>
         </section>
     <section class="ftco-section bg-light">
-        <form asp-action="GetProducts" method="get" enctype="multipart/form-data">
+        <form asp-action="GetProducts" method="get" >
             <label for="sort">Option:</label>
             <select id="sort" name="sort">
-                <option value="ascending">Preço: Crescente</option>
-                <option value="descending">Preço: Decrescente</option>
+                <option value="ascending">Price: ascending</option>
+                <option value="descending">Price: descending</option>
             </select>
-            <input name="sort" asp-controller="Cars" asp-action="GetProducts" type="submit" value="Pesquisar" />
+            <input name="btnSubmeter" asp-controller="Cars" asp-action="GetProducts" type="submit" value="Pesquisar" />
         </form>
+        @*<form asp-action="GetCategories" method="get">
+            <label for="sort">Option:</label>
+            <label asp-for="Type" class="control-label"></label>
+            <select asp-for="Type"
+                    asp-items="ViewBag.ListTypes"
+                    class="form-control">
+            </select>
+            <input name="btnSubmeter" asp-controller="Cars" asp-action="GetCategories" type="submit" value="Pesquisar" />
+        </form>*@
         <div class="container">
             <div class="row">
                 @foreach (var item in Model)
                 {
                     <div class="col-md-4">
                         <div class="car-wrap rounded ftco-animate fadeInUp ftco-animated">
-                            <div class="img rounded d-flex align-items-end" style="background-image: url(images/car-1.jpg);"></div>
+                            <div class="img rounded d-flex align-items-end" style="background-image: url(/images/car-1.jpg);"></div>
                             <div class="text">
                                 <h2 class="mb-0">@Html.DisplayFor(modelItem => item.Maker)</h2>
                                 <div class="d-flex mb-3">
