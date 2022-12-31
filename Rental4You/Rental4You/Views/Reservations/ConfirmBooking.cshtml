@@ -1,0 +1,53 @@
+﻿@model Reservation
+@{
+	ViewData["Title"] = "ConfirmBooking";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>Confirm your reservation</h3>
+
+<div class="contanier" style="margin-left: 20px">
+	<form asp-action="Create">
+		<div class="col">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<input type="hidden" asp-for="Start" />
+			<input type="hidden" asp-for="End" />
+			<input type="hidden" asp-for="carId" />
+			<input type="hidden" asp-for="price" />
+			<div class="form-group">
+				@if (Directory.Exists("wwwroot\\uploads\\cars\\" + Model.carId))
+                {
+					<h3	>@Model.car.Maker @Model.car.Model</h3>
+					List<string> imgPaths = new List<string>();
+                    imgPaths = Directory.EnumerateFiles("wwwroot\\uploads\\cars\\" + Model.carId).ToList();
+                    string img = imgPaths[0];
+                    img = img.Replace("wwwroot", "");
+                    <img src="@img" class="img rounded d-flex align-items-end" width=500/>
+                }
+                else
+                {
+                    <h3>@Model.car.Maker @Model.car.Model</h3>
+                }
+			</div>
+			<div class="form-group">
+				<label asp-for="Start" class="control-label"></label>
+                <input asp-for="Start" class="form-control" readonly disabled/>
+                <span asp-validation-for="Start" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="End" class="control-label"></label>
+                <input asp-for="End" class="form-control" readonly disabled/>
+                <span asp-validation-for="End" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				@{
+					var days = (Model.End - Model.Start).TotalDays;
+
+					<p class="alert alert-info">This reservation has a duration of <b>@days</b> day(s)</p>
+					<p class="alert alert-info">This reservation has a cost of <b>@Model.price</b><span class=" icon-euro_symbol"></p>
+				}
+			</div>
+			<input value="Confirm Reservation" type="submit" class="btn btn-primary"/>
+		</div>
+	</form>
+</div>

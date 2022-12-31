@@ -1,0 +1,42 @@
+﻿@model Rental4You.ViewModels.ReservationViewModel
+@{
+	ViewData["Title"] = "Booking";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="contanier" style="margin-left: 20px">
+	<form asp-action="Calculate" asp-controller="Reservations">
+		<div class="col">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<input type="hidden" asp-for="carID"/>
+			<div class="form-group">
+				@if (Directory.Exists("wwwroot\\uploads\\cars\\" + Model.carID))
+                {
+					<h3	>@Model.carMaker @Model.carModel</h3>
+					List<string> imgPaths = new List<string>();
+                    imgPaths = Directory.EnumerateFiles("wwwroot\\uploads\\cars\\" + Model.carID).ToList();
+                    string img = imgPaths[0];
+                    img = img.Replace("wwwroot", "");
+                    <img src="@img" class="img rounded d-flex align-items-end" width=500/>
+                }
+                else
+                {
+                    <h3>@Model.carMaker @Model.carModel</h3>
+                }
+			</div>
+			<div class="form-group">
+				<label asp-for="start" class="control-label"></label>
+                <input asp-for="start" class="form-control"/>
+                <span asp-validation-for="start" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="end" class="control-label"></label>
+                <input asp-for="end" class="form-control"/>
+                <span asp-validation-for="end" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<input value="Book" type="submit" class="btn btn-primary"/>
+			</div>
+		</div>
+	</form>
+</div>

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Rental4You.Data;
 using Rental4You.Models;
+using Rental4You.ViewModels;
 
 namespace Rental4You.Controllers
 {
@@ -25,6 +26,61 @@ namespace Rental4You.Controllers
         {
             var applicationDbContext = _context.reservations.Include(r => r.car).Include(r => r.delivery);
             return View(await applicationDbContext.ToListAsync());
+        }
+
+        public IActionResult Booking(int id)
+        {
+            var carList = _context.cars.ToList();
+
+            var viewModel = new ReservationViewModel();
+
+            viewModel.carID = id;
+            viewModel.start = DateTime.Now.Date;
+            viewModel.end = DateTime.Now.AddDays(1).Date;
+
+            foreach (var car in carList)
+            {
+                if (car.Id == id)
+                {
+                    viewModel.carMaker = car.Maker;
+                    viewModel.carModel = car.Model;
+                }
+
+            }
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Calculate([Bind("start, end, carID")] ReservationViewModel request)
+        {
+            ModelState.Remove(nameof(request.carModel));
+            ModelState.Remove(nameof(request.carMaker));
+
+            if (request.start > request.end)
+            {
+                ModelState.AddModelError("Start Date", "Start date cannot be after the end date");
+            }
+            if (ModelState.IsValid)
+            {
+                var id = request.carID;
+                var carList = _context.cars;
+                var car = carList.Find(request.carID);
+                var nDays = (request.end - request.start).TotalDays;
+                var nPrice = nDays * car.price;
+
+                Reservation reservation = new Reservation();
+                reservation.Start = request.start;
+                reservation.End = request.end;
+                reservation.price = (float)nPrice;
+                reservation.carId = request.carID;
+                reservation.car = car;
+
+                return View("ConfirmBooking", reservation);
+
+            }
+
+            return View("Booking", request);
         }
 
         // GET: Reservations/Details/5
@@ -51,8 +107,7 @@ namespace Rental4You.Controllers
         // GET: Reservations/Create
         [Authorize(Roles = "Client")]
         public IActionResult Create()
-        {
-            ViewData["carId"] = new SelectList(_context.cars.ToList(), "Id", "Maker", "Model");         
+        {    
             return View();
         }
 
