@@ -379,6 +379,10 @@ namespace Rental4You.Migrations
                     b.Property<int>("carId")
                         .HasColumnType("int");
 
+                    b.Property<string>("clientUsername")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("confirmed")
                         .HasColumnType("bit");
 

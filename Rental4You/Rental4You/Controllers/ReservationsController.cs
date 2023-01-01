@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,10 +16,12 @@ namespace Rental4You.Controllers
     public class ReservationsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ReservationsController(ApplicationDbContext context)
+        public ReservationsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Reservations
@@ -35,8 +38,6 @@ namespace Rental4You.Controllers
             var viewModel = new ReservationViewModel();
 
             viewModel.carID = id;
-            viewModel.start = DateTime.Now.Date;
-            viewModel.end = DateTime.Now.AddDays(1).Date;
 
             foreach (var car in carList)
             {
@@ -116,18 +117,28 @@ namespace Rental4You.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Start,End,carId,deliveryId,returnalId")] Reservation reservation)
+        [Authorize(Roles = "Client")]
+        public async Task<IActionResult> Create([Bind("Id,Start,End,carId,price")] Reservation reservation)
         {
+            ModelState.Remove(nameof(reservation.delivery));
+            ModelState.Remove(nameof(reservation.deliveryId));
+            ModelState.Remove(nameof(reservation.employee));
+            ModelState.Remove(nameof(reservation.car));
+
+            reservation.clientUsername = User.Identity.Name;
+            reservation.confirmed = false;           
+            reservation.Start = DateTime.Now;
+            reservation.End = DateTime.Now.AddDays(1);
+
+
             if (ModelState.IsValid)
             {
                 _context.Add(reservation);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["carId"] = new SelectList(_context.cars, "Id", "Id", reservation.carId);
-            ViewData["deliveryId"] = new SelectList(_context.deliveries, "Id", "Id", reservation.deliveryId);
         
-            return View(reservation);
+            return View("ConfirmBooking", reservation);
         }
 
         // GET: Reservations/Edit/5

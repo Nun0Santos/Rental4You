@@ -1,6 +1,6 @@
 ﻿@model Reservation
 @{
-	ViewData["Title"] = "ConfirmBooking";
+	ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -10,8 +10,6 @@
 	<form asp-action="Create">
 		<div class="col">
 			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-			<input type="hidden" asp-for="Start" />
-			<input type="hidden" asp-for="End" />
 			<input type="hidden" asp-for="carId" />
 			<input type="hidden" asp-for="price" />
 			<div class="form-group">
