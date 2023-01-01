@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -23,9 +24,29 @@ namespace Rental4You.Models
         }
 
         // GET: Reservations
+        [Authorize(Roles = "Admin, Employee, Manager")]
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.reservations.Include(r => r.Car).Include(r => r.Client);
+            if (User.IsInRole("Employee") || User.IsInRole("Manager"))
+            {
+                var userList = _userManager.Users.ToList();
+                foreach (var u in userList)
+                {
+                    if (u.Id == _userManager.GetUserId(User))
+                    {
+                        
+                        return View(await _context.reservations.Include(r => r.Car).Include(r => r.Car)
+                                                    .Include(r => r.Client)
+                                                    .Include(r => r.Car.Company)
+                                                    //.Where(c => c.Car.CompanyId == u.CompanyId)
+                                                    .ToListAsync());
+                    }
+                }
+            }
+
+            var applicationDbContext = _context.reservations.Include(r => r.Car).Include(r => r.Car)
+               .Include(r => r.Client)
+               .Include(r => r.Car.Company);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -105,6 +126,7 @@ namespace Rental4You.Models
 
 
         // GET: Reservations/Create
+        [Authorize(Roles = "Admin, Employee, Manager, Client")]
         public IActionResult Create()
         {
             ViewData["CarId"] = new SelectList(_context.cars, "Id", "Id");
@@ -117,6 +139,7 @@ namespace Rental4You.Models
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Employee, Manager, Client")]
         public async Task<IActionResult> Create([Bind("Id,Start,End,CarId,Price,Confirmed")] Reservation reservation)
         {
             ModelState.Remove(nameof(reservation.Car));
@@ -138,6 +161,7 @@ namespace Rental4You.Models
         }
 
         // GET: Reservations/Edit/5
+        [Authorize(Roles = "Admin, Employee, Manager")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.reservations == null)
@@ -160,8 +184,12 @@ namespace Rental4You.Models
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Employee, Manager")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Start,End,CarId,ClientId,Price,Confirmed")] Reservation reservation)
         {
+            ModelState.Remove(nameof(reservation.Car));
+            ModelState.Remove(nameof(reservation.Client));
+
             if (id != reservation.Id)
             {
                 return NotFound();
@@ -193,6 +221,7 @@ namespace Rental4You.Models
         }
 
         // GET: Reservations/Delete/5
+        [Authorize(Roles = "Admin, Employee, Manager")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.reservations == null)
@@ -215,13 +244,20 @@ namespace Rental4You.Models
         // POST: Reservations/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Employee, Manager")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.reservations == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.reservations'  is null.");
             }
+            
             var reservation = await _context.reservations.FindAsync(id);
+            if (reservation.Confirmed)
+            {
+                return Problem("This reservation has already been confirmed");
+            }
+            
             if (reservation != null)
             {
                 _context.reservations.Remove(reservation);
@@ -234,6 +270,26 @@ namespace Rental4You.Models
         private bool ReservationExists(int id)
         {
           return _context.reservations.Any(e => e.Id == id);
+        }
+
+        [Authorize(Roles = "Admin, Employee, Manager")]
+        public ActionResult confirmReservation(int id)
+        {
+
+            return View("Index", _context.reservations.Include(r => r.Car).Include(r => r.Car)
+                .Include(r => r.Client)
+                .Include(r => r.Car.Company));
+        }
+
+        [Authorize(Roles = "Client")]
+        public async Task<IActionResult> MyReservations()
+        {
+            var applicationDbContext = _context.reservations.Include(r => r.Car)
+                .Include(r => r.Client)
+                .Include(r => r.Car.Company)
+                .Where(c => c.Client.Id == _userManager.GetUserId(User));
+
+            return View(await applicationDbContext.ToListAsync());
         }
     }
 }
