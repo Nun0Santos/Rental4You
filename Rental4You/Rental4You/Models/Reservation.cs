@@ -5,13 +5,11 @@
         public int Id { get; set; }
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
-        public Car car { get; set; }
-        public int carId { get; set; } //FK
-        public Delivery delivery { get; set; }
-        public int deliveryId { get; set; } //fk
-        public float price { get; set; }
-        public ApplicationUser employee { get; set; }
-        public string clientUsername { get; set; }
-        public bool confirmed { get; set; }
+        public Car Car { get; set; }
+        public int CarId { get; set; }
+        public ApplicationUser Client { get; set; }
+        public string ClientId { get; set; }
+        public decimal Price { get; set; }
+        public bool Confirmed { get; set; }
     }
 }

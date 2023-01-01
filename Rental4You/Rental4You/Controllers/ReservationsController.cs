@@ -2,16 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Rental4You.Data;
-using Rental4You.Models;
 using Rental4You.ViewModels;
 
-namespace Rental4You.Controllers
+namespace Rental4You.Models
 {
     public class ReservationsController : Controller
     {
@@ -27,9 +25,30 @@ namespace Rental4You.Controllers
         // GET: Reservations
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.reservations.Include(r => r.car).Include(r => r.delivery);
+            var applicationDbContext = _context.reservations.Include(r => r.Car).Include(r => r.Client);
             return View(await applicationDbContext.ToListAsync());
         }
+
+        // GET: Reservations/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null || _context.reservations == null)
+            {
+                return NotFound();
+            }
+
+            var reservation = await _context.reservations
+                .Include(r => r.Car)
+                .Include(r => r.Client)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (reservation == null)
+            {
+                return NotFound();
+            }
+
+            return View(reservation);
+        }
+
 
         public IActionResult Booking(int id)
         {
@@ -73,9 +92,9 @@ namespace Rental4You.Controllers
                 Reservation reservation = new Reservation();
                 reservation.Start = request.start;
                 reservation.End = request.end;
-                reservation.price = (float)nPrice;
-                reservation.carId = request.carID;
-                reservation.car = car;
+                reservation.Price = (decimal)nPrice;
+                reservation.CarId = request.carID;
+                reservation.Car = car;
 
                 return View("ConfirmBooking", reservation);
 
@@ -84,31 +103,12 @@ namespace Rental4You.Controllers
             return View("Booking", request);
         }
 
-        // GET: Reservations/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.reservations == null)
-            {
-                return NotFound();
-            }
-
-            var reservation = await _context.reservations
-                .Include(r => r.car)
-                .Include(r => r.delivery)
-             
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (reservation == null)
-            {
-                return NotFound();
-            }
-
-            return View(reservation);
-        }
 
         // GET: Reservations/Create
-        [Authorize(Roles = "Client")]
         public IActionResult Create()
-        {    
+        {
+            ViewData["CarId"] = new SelectList(_context.cars, "Id", "Id");
+            ViewData["ClientId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
@@ -117,19 +117,14 @@ namespace Rental4You.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Client")]
-        public async Task<IActionResult> Create([Bind("Id,Start,End,carId,price")] Reservation reservation)
+        public async Task<IActionResult> Create([Bind("Id,Start,End,CarId,Price,Confirmed")] Reservation reservation)
         {
-            ModelState.Remove(nameof(reservation.delivery));
-            ModelState.Remove(nameof(reservation.deliveryId));
-            ModelState.Remove(nameof(reservation.employee));
-            ModelState.Remove(nameof(reservation.car));
+            ModelState.Remove(nameof(reservation.Car));
+            
+            reservation.ClientId = _userManager.GetUserId(User);
 
-            reservation.clientUsername = User.Identity.Name;
-            reservation.confirmed = false;           
-            reservation.Start = DateTime.Now;
-            reservation.End = DateTime.Now.AddDays(1);
-
+            ModelState.Remove(nameof(reservation.Client));
+            ModelState.Remove(nameof(reservation.ClientId));
 
             if (ModelState.IsValid)
             {
@@ -137,8 +132,9 @@ namespace Rental4You.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-        
-            return View("ConfirmBooking", reservation);
+            ViewData["CarId"] = new SelectList(_context.cars, "Id", "Id", reservation.CarId);
+            ViewData["ClientId"] = new SelectList(_context.Users, "Id", "Id", reservation.ClientId);
+            return View(reservation);
         }
 
         // GET: Reservations/Edit/5
@@ -154,9 +150,8 @@ namespace Rental4You.Controllers
             {
                 return NotFound();
             }
-            ViewData["carId"] = new SelectList(_context.cars, "Id", "Id", reservation.carId);
-            ViewData["deliveryId"] = new SelectList(_context.deliveries, "Id", "Id", reservation.deliveryId);
-      
+            ViewData["CarId"] = new SelectList(_context.cars, "Id", "Id", reservation.CarId);
+            ViewData["ClientId"] = new SelectList(_context.Users, "Id", "Id", reservation.ClientId);
             return View(reservation);
         }
 
@@ -165,7 +160,7 @@ namespace Rental4You.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Start,End,carId,deliveryId,returnalId")] Reservation reservation)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Start,End,CarId,ClientId,Price,Confirmed")] Reservation reservation)
         {
             if (id != reservation.Id)
             {
@@ -192,9 +187,8 @@ namespace Rental4You.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["carId"] = new SelectList(_context.cars, "Id", "Id", reservation.carId);
-            ViewData["deliveryId"] = new SelectList(_context.deliveries, "Id", "Id", reservation.deliveryId);
-         
+            ViewData["CarId"] = new SelectList(_context.cars, "Id", "Id", reservation.CarId);
+            ViewData["ClientId"] = new SelectList(_context.Users, "Id", "Id", reservation.ClientId);
             return View(reservation);
         }
 
@@ -207,9 +201,8 @@ namespace Rental4You.Controllers
             }
 
             var reservation = await _context.reservations
-                .Include(r => r.car)
-                .Include(r => r.delivery)
-            
+                .Include(r => r.Car)
+                .Include(r => r.Client)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (reservation == null)
             {
