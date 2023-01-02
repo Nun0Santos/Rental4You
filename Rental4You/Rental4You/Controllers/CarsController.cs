@@ -236,14 +236,14 @@ namespace Rental4You.Controllers
 
             if (string.IsNullOrWhiteSpace(search.VehicleType) && string.IsNullOrWhiteSpace(search.PickupLocation))
             {
-                searchCar.ListOfCars = await _context.cars.ToListAsync();
+                searchCar.ListOfCars = await _context.cars.Include(c => c.Company).ToListAsync();
                 return View(searchCar);
             }
 
             if (string.IsNullOrWhiteSpace(search.PickupLocation))
             {
-                searchCar.ListOfCars = await _context.cars.
-                    Where(c => c.Type.Contains(search.VehicleType)
+                searchCar.ListOfCars = await _context.cars.Include(c => c.Company)
+                    .Where(c => c.Type.Contains(search.VehicleType)
                          ).ToListAsync();
 
                 searchCar.TextToSearch = search.VehicleType;
@@ -254,7 +254,7 @@ namespace Rental4You.Controllers
 
             if (string.IsNullOrWhiteSpace(search.VehicleType))
             {
-                searchCar.ListOfCars = await _context.cars.
+                searchCar.ListOfCars = await _context.cars.Include(c => c.Company).
                    Where(c => c.Location.Contains(search.PickupLocation)
                         ).ToListAsync();
 
@@ -265,7 +265,7 @@ namespace Rental4You.Controllers
 
             }
             
-            searchCar.ListOfCars = await _context.cars.
+            searchCar.ListOfCars = await _context.cars.Include(c => c.Company).
                     Where(c => c.Type.Contains(search.VehicleType) &&  c.Location.Contains(search.PickupLocation)
                          ).ToListAsync();
 

@@ -45,10 +45,10 @@ else
     <div class="row">
         @foreach (var item in Model.ListOfCars)
         {
-            <div class="col-md-4">
-                <div class="car-wrap rounded ftco-animate fadeInUp ftco-animated">
-                    <div>
-                        @if (Directory.Exists("wwwroot\\uploads\\cars\\" + item.Id))
+            <div class="col-4">
+                        <div class="car-wrap rounded ftco-animate fadeInUp ftco-animated">
+                            <div>
+                                @if (Directory.Exists("wwwroot\\uploads\\cars\\" + item.Id))
                                 {
                                     List<string> imgPaths = new List<string>();
                                     imgPaths = Directory.EnumerateFiles("wwwroot\\uploads\\cars\\" + item.Id).ToList();
@@ -60,23 +60,38 @@ else
                                 {
                                     <img src="~/images/car-1.jpg" class="img rounded d-flex align-items-end"/>
                                 }
-                    </div>
-                    <div class="text">
-                        <h2 class="mb-0">@Html.DisplayFor(modelItem => item.Maker)</h2>
-                        <div class="d-flex mb-3">
-                            <span class="cat">@Html.DisplayFor(modelItem => item.Model)</span>
-                        </div>
-                        <p class="d-flex mb-0 d-block">
-                                    <a asp-controller="Reservations" asp-action="Create" class="btn btn-primary">Rent</a>
+                            </div>
+                            <div class="text row">
+                                <div class="col">
+                                    <h6 class="mb-0">@Html.DisplayFor(modelItem => item.Maker)</h6>
+                                    <div class="d-flex mb-3">
+                                        <span class="cat">@Html.DisplayFor(modelItem => item.Model)</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <h6 class="mb-0">@Html.DisplayFor(modelItem => item.Company.Name)</h6>
+                                    <div class="d-flex mb-3">
+                                        <span class="cat">@Html.DisplayFor(modelItem => item.Company.Rating)</span>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <h6 class="mb-0">@Html.DisplayFor(modelItem => item.price)<span class=" icon-euro_symbol"></span></h6>
+                                    <div class="d-flex mb-3">
+                                        <span class="cat">per day</span>
+                                    </div>
+                                </div>
+
+                                <p class="d-flex mb-0 d-block">
+                                    <a asp-controller="Reservations" asp-action="Booking" asp-route-id="@item.Id" class="btn btn-primary">Rent</a>
                                     <a asp-controller="Cars" asp-action="Details"  asp-route-id="@item.Id" class="btn btn-secondary">Details</a>
                                     @if(User.IsInRole("Admin") || User.IsInRole("Manager") || User.IsInRole("Employee")){
                                         <a asp-controller="Cars" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a>
                                         <a asp-action="Delete" asp-controller="Cars" asp-route-id="@item.Id" class="btn btn-secondary">Delete</a>
                                     }
                                 </p>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
         }
     </div>
 </div>

@@ -9,9 +9,13 @@ namespace Rental4You.ViewModels
         public List<Car> ListOfCars { get; set; }
 
         [Display(Name = "PickupDate", Prompt = "yyyy-mm-dd")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
+        [DataType(DataType.DateTime)]
         public DateTime PickupDate {get;set;}
 
         [Display(Name = "ReturnDate", Prompt = "yyyy-mm-dd")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
+        [DataType(DataType.DateTime)]
         public DateTime ReturnDate { get; set; }
 
         [Display(Name = "PickupLocation", Prompt = "City")]

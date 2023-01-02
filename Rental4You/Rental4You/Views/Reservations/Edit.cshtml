@@ -8,13 +8,15 @@
 
 <h4>Reservation</h4>
 <hr />
-<div class="row">
+<div class="row" style="margin-left: 20px">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="CarId" />
             <input type="hidden" asp-for="ClientId" />
+            <input type="hidden" asp-for="Price" />
+            <input type="hidden" asp-for="Confirmed" />
             <div class="form-group">
                 <label asp-for="Start" class="control-label"></label>
                 <input asp-for="Start" class="form-control" />
@@ -26,24 +28,14 @@
                 <span asp-validation-for="End" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Confirmed" /> @Html.DisplayNameFor(model => model.Confirmed)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-success" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+<div style="margin-left: 20px">
+    <a asp-action="Index" class="btn-primary btn">Back to List</a>
 </div>
 
 @section Scripts {
