@@ -212,6 +212,10 @@ namespace Rental4You.Controllers
             var car = await _context.cars.FindAsync(id);
             if (car != null)
             {
+                if (Directory.Exists("wwwroot\\uploads\\cars\\" + id))
+                {
+                    Directory.Delete("wwwroot\\uploads\\cars\\" + id, true);
+                }
                 _context.cars.Remove(car);
             }
 
