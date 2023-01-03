@@ -1,0 +1,87 @@
+﻿@model IEnumerable<Rental4You.Models.Delivery>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1 style="margin-left: 10px">Deliveries</h1>
+
+<p style="margin-left: 10px">
+    <a asp-action="DeliveryRequests" class="btn-warning btn">Requests</a>
+</p>
+<table class="table table-bordered table-striped table-hover">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Km)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Damage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Observations)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Car)
+            </th>
+            <th>
+                Car Image
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Employee)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateOfDelivery)
+            </th>
+            <th>
+                Client
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Km)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Damage)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Observations)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Car.Maker)
+                @Html.DisplayFor(modelItem => item.Car.Model)
+            </td>
+                        <td>
+                @if (Directory.EnumerateFiles("wwwroot\\uploads\\cars\\" + item.CarId).Count() > 0)
+                {
+					List<string> imgPaths = new List<string>();
+                    imgPaths = Directory.EnumerateFiles("wwwroot\\uploads\\cars\\" + item.CarId).ToList();
+                    string img = imgPaths[0];
+                    img = img.Replace("wwwroot", "");
+                    <img src="@img" class="img rounded d-flex align-items-end" width=200/>
+                }
+                else
+                {
+                    <img src="~/images/car-1.jpg" class="img rounded d-flex align-items-end" width=500/>
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Employee.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateOfDelivery)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Reservation.Client.UserName)
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn-primary btn">Details</a> 
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

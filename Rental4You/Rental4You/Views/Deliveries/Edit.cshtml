@@ -1,0 +1,62 @@
+﻿@model Rental4You.Models.Delivery
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1 style="margin-left: 10px">Confirm</h1>
+
+<h4 style="margin-left: 10px">Delivery</h4>
+<hr />
+<div class="row" style="margin-left: 10px">
+    <div class="col-md-4">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="Km" />
+            <input type="hidden" asp-for="Observations" />
+            <input type="hidden" asp-for="CarId" />
+            <input type="hidden" asp-for="DateOfDelivery" />
+            <input type="hidden" asp-for="ReservationId" />
+            <div class="form-group">
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Damage" /> @Html.DisplayNameFor(model => model.Damage)
+                </label>
+            </div>
+            <div class="form-group">
+                <label >In case of damage, please attach photos:</label>
+                <input type="file" multiple accept=".png,.jpg,.jpeg,image/png,image/jpeg" class="form-control" name="files"/>
+                <span  class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Confirm" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+    @if (Model.Damage)
+    {
+        if (Directory.EnumerateFiles("wwwroot\\uploads\\deliveries\\" + Model.Id).Count() > 0)
+        {
+            List<string> imgPaths = new List<string>();
+            imgPaths = Directory.EnumerateFiles("wwwroot\\uploads\\deliveries\\" + Model.Id).ToList();
+            
+            <div class="col-md-4">
+                @foreach (var img in imgPaths)
+                {
+                    var i = img.Replace("wwwroot", "");
+                    <img src="@i" class="col img"/>
+                }
+            </div>
+        }
+    }
+</div>
+
+<div style="margin-left: 10px">
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

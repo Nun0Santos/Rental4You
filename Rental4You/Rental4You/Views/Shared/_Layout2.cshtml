@@ -45,6 +45,7 @@
                     @if (User.IsInRole("Admin") || User.IsInRole("Manager") || User.IsInRole("Employee"))
                     {
                         <li class="nav-item"><a asp-controller="Reservations" asp-action="Index" class="nav-link">Reservations</a></li>
+                        <li class="nav-item"><a asp-controller="Deliveries" asp-action="Index" class="nav-link">Deliveries</a></li>
                     }
                     @if (User.IsInRole("Client"))
                     {

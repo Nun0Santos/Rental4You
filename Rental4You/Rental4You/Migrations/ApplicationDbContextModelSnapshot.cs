@@ -228,6 +228,9 @@ namespace Rental4You.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<bool>("isActive")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
@@ -291,6 +294,12 @@ namespace Rental4You.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("isActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("isReserved")
+                        .HasColumnType("bit");
+
                     b.Property<float>("price")
                         .HasColumnType("real");
 
@@ -302,7 +311,7 @@ namespace Rental4You.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("cars", (string)null);
+                    b.ToTable("cars");
                 });
 
             modelBuilder.Entity("Rental4You.Models.Company", b =>
@@ -320,9 +329,12 @@ namespace Rental4You.Migrations
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
+                    b.Property<bool>("isActive")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Company", (string)null);
+                    b.ToTable("Company");
                 });
 
             modelBuilder.Entity("Rental4You.Models.Delivery", b =>
@@ -333,8 +345,17 @@ namespace Rental4You.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("CarId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("Damage")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime>("DateOfDelivery")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EmployeeId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<double>("Km")
                         .HasColumnType("float");
@@ -343,23 +364,21 @@ namespace Rental4You.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("State")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("carId")
+                    b.Property<int>("ReservationId")
                         .HasColumnType("int");
 
-                    b.Property<string>("employeeId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<bool>("isReceived")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("carId");
+                    b.HasIndex("CarId");
 
-                    b.HasIndex("employeeId");
+                    b.HasIndex("EmployeeId");
 
-                    b.ToTable("deliveries", (string)null);
+                    b.HasIndex("ReservationId");
+
+                    b.ToTable("deliveries");
                 });
 
             modelBuilder.Entity("Rental4You.Models.Reservation", b =>
@@ -389,13 +408,16 @@ namespace Rental4You.Migrations
                     b.Property<DateTime>("Start")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("isDelivered")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CarId");
 
                     b.HasIndex("ClientId");
 
-                    b.ToTable("reservations", (string)null);
+                    b.ToTable("reservations");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -469,19 +491,27 @@ namespace Rental4You.Migrations
 
             modelBuilder.Entity("Rental4You.Models.Delivery", b =>
                 {
-                    b.HasOne("Rental4You.Models.Car", "car")
+                    b.HasOne("Rental4You.Models.Car", "Car")
                         .WithMany()
-                        .HasForeignKey("carId")
+                        .HasForeignKey("CarId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Rental4You.Models.ApplicationUser", "employee")
+                    b.HasOne("Rental4You.Models.ApplicationUser", "Employee")
                         .WithMany()
-                        .HasForeignKey("employeeId");
+                        .HasForeignKey("EmployeeId");
 
-                    b.Navigation("car");
+                    b.HasOne("Rental4You.Models.Reservation", "Reservation")
+                        .WithMany()
+                        .HasForeignKey("ReservationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("employee");
+                    b.Navigation("Car");
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("Reservation");
                 });
 
             modelBuilder.Entity("Rental4You.Models.Reservation", b =>

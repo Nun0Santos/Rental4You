@@ -19,7 +19,7 @@
                 @Html.DisplayNameFor(model => model.Car)
             </th>
             <th>
-                Image
+                Car Image
             </th>
             <th>
                 Company
@@ -51,7 +51,7 @@
                 @Html.DisplayFor(modelItem => item.Car.Maker) @Html.DisplayFor(modelItem => item.Car.Model)
             </td>
             <td>
-                @if (Directory.Exists("wwwroot\\uploads\\cars\\" + item.CarId))
+                @if (Directory.EnumerateFiles("wwwroot\\uploads\\cars\\" + item.CarId).Count() > 0)
                 {
 					List<string> imgPaths = new List<string>();
                     imgPaths = Directory.EnumerateFiles("wwwroot\\uploads\\cars\\" + item.CarId).ToList();

@@ -17,5 +17,6 @@ namespace Rental4You.Models
         public string ClientId { get; set; }
         public decimal Price { get; set; }
         public bool Confirmed { get; set; }
+        public bool isDelivered { get; set; }
     }
 }

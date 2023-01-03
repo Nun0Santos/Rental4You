@@ -149,6 +149,11 @@ namespace Rental4You.Models
             ModelState.Remove(nameof(reservation.Client));
             ModelState.Remove(nameof(reservation.ClientId));
 
+            reservation.isDelivered = false;
+
+            var car = _context.cars.Find(reservation.CarId);
+            car.isReserved = true;
+
             if (ModelState.IsValid)
             {
                 _context.Add(reservation);
@@ -194,6 +199,7 @@ namespace Rental4You.Models
             ModelState.Remove(nameof(reservation.Car));
             ModelState.Remove(nameof(reservation.Client));
             ModelState.Remove(nameof(reservation.Confirmed));
+            ModelState.Remove(nameof(reservation.isDelivered));
 
 
             var car = _context.cars.Find(reservation.CarId);

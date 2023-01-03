@@ -48,7 +48,7 @@ else
             <div class="col-4">
                         <div class="car-wrap rounded ftco-animate fadeInUp ftco-animated">
                             <div>
-                                @if (Directory.Exists("wwwroot\\uploads\\cars\\" + item.Id))
+                                @if (Directory.EnumerateFiles("wwwroot\\uploads\\cars\\" + item.Id).Count() > 0)
                                 {
                                     List<string> imgPaths = new List<string>();
                                     imgPaths = Directory.EnumerateFiles("wwwroot\\uploads\\cars\\" + item.Id).ToList();

@@ -1,0 +1,48 @@
+﻿@model Rental4You.Models.Delivery
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Delivery</h1>
+<hr />
+<div class="container" style="margin-left: 10px">
+    <form asp-action="Create" class="row" enctype="multipart/form-data">
+        <select asp-for="CarId" asp-items="ViewBag.CarId" hidden></select>
+        <select asp-for="ReservationId" asp-items="ViewBag.ReservationId" hidden></select>
+        <div class="col-md-4">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Km" class="control-label"></label>
+                <input asp-for="Km" class="form-control" />
+                <span asp-validation-for="Km" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Damage"/> @Html.DisplayNameFor(model => model.Damage)
+                </label>
+            </div>
+            <div class="form-group">
+                <label >In case of damage, please attach photos:</label>
+                <input type="file" multiple accept=".png,.jpg,.jpeg,image/png,image/jpeg" class="form-control" name="files"/>
+                <span  class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Observations" class="control-label"></label>
+                <textarea rows="10" asp-for="Observations" class="form-control" required="false"></textarea>
+                <span asp-validation-for="Observations" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Deliver" class="btn btn-primary" />
+            </div>
+        </div>
+       </form>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

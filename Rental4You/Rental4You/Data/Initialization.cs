@@ -29,7 +29,8 @@ namespace Rental4You.Data
                 Name = "Administrador",
                 Surname = "Local",
                 EmailConfirmed = true,
-                PhoneNumberConfirmed = true
+                PhoneNumberConfirmed = true,
+                isActive = true,
             };
             var user = await userManager.FindByEmailAsync(defaultUser.Email);
             if (user == null)

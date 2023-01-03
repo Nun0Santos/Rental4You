@@ -12,6 +12,7 @@
 <hr />
 <div class="container" style="margin-left: 10px">
 <form asp-action="Edit" class="row" enctype="multipart/form-data">
+    <input type="hidden" asp-for="isReserved"/>
             <div class="col-md-4">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -99,10 +100,15 @@
 
                 <span asp-validation-for="CompanyId" class="text-danger"></span>
          </div>
-        <div>
+        <div class="form-group">
             <label >Car images:</label>
             <input type="file" multiple accept=".png,.jpg,.jpeg,image/png,image/jpeg" class="form-control" name="files"/>
             <span  class="text-danger"></span>
+        </div>
+    <div class="form-group form-check" style="margin-top: 50px">
+            <label class="form-check-label">
+                <input class="form-check-input" asp-for="isActive"/> @Html.DisplayNameFor(model => model.isActive)
+            </label>
         </div>
     </div>
 
@@ -122,7 +128,7 @@
 <h4>Delete Images</h4>
 <p>Click on top of the image you want to delete</p>
 <div class="row" style="margin-left: 20px">
-    @if (Directory.Exists("wwwroot\\uploads\\cars\\" + Model.Id))
+    @if (Directory.EnumerateFiles("wwwroot\\uploads\\cars\\" + Model.Id).Count() > 0)
     {
         List<string> imgPaths = new List<string>();
         imgPaths = Directory.EnumerateFiles("wwwroot\\uploads\\cars\\" + Model.Id).ToList();

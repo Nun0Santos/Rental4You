@@ -25,7 +25,7 @@ namespace Rental4You.Controllers
         // GET: Cars
         public async Task<IActionResult> Index()
         {
-            return View(await _context.cars.Include(c => c.Company).ToListAsync());
+            return View(await _context.cars.Include(c => c.Company).Where(c => c.isActive == true && c.isReserved == false).ToListAsync());
         }
 
         // GET: Cars/Details/5
@@ -65,6 +65,9 @@ namespace Rental4You.Controllers
         {
             ViewData["Companies"] = new SelectList(_context.Company.ToList(), "Id", "Name");
             ModelState.Remove(nameof(car.Company));
+
+            car.isActive = true;
+            car.isReserved = false;
 
             if (ModelState.IsValid)
             {
@@ -123,7 +126,7 @@ namespace Rental4You.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin, Employee, Manager")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Maker,Model,Type,Transmission,Seats,Year,LicensePlate,Location,Km,state, price, fuel, CompanyId")] Car car, [FromForm]List<IFormFile> files)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Maker,Model,Type,Transmission,Seats,Year,LicensePlate,Location,Km,state, price, fuel, CompanyId, isActive, isReserved")] Car car, [FromForm]List<IFormFile> files)
         {
             ViewData["Companies"] = new SelectList(_context.Company.ToList(), "Id", "Name");
 
