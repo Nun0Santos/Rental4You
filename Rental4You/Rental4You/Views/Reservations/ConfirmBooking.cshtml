@@ -47,7 +47,12 @@
 					<p class="alert alert-info">This reservation has a cost of <b>@Model.Price</b><span class=" icon-euro_symbol"></p>
 				}
 			</div>
-			<input value="Confirm Reservation" type="submit" class="btn btn-primary"/>
+			@if(User.Identity.IsAuthenticated){
+				<input value="Confirm Reservation" type="submit" class="btn btn-primary"/>
+			}else
+				{
+					<h5 class="text-danger">Login or Create a new account to procced</h5>
+				}
 		</div>
 	</form>
 </div>
