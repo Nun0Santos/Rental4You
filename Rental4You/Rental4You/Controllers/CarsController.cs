@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,15 +17,35 @@ namespace Rental4You.Controllers
     public class CarsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public CarsController(ApplicationDbContext context)
+        public CarsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
+
         }
 
         // GET: Cars
+
         public async Task<IActionResult> Index()
         {
+            if (User.IsInRole("Employee") || User.IsInRole("Manager"))
+            {
+                var userList = _context.Users.Find(_userManager.GetUserId(User));
+                var companyList = _context.Company;
+
+                foreach (var u in companyList)
+                {
+                    if (u.Employees.Contains(userList))
+                    {
+                        return View(await _context.cars.Include(c => c.Company).Where(c => c.Company.Equals(companyList) && c.isActive == true && c.isReserved == false).ToListAsync());
+                       
+                    }
+                }
+            }
+
+
             return View(await _context.cars.Include(c => c.Company).Where(c => c.isActive == true && c.isReserved == false).ToListAsync());
         }
 
@@ -310,29 +331,22 @@ namespace Rental4You.Controllers
         //}
         public ActionResult GetProducts(string sort)
         {
-            //List<Car> products = GetProducts();
-            //List<Car> cars = new List<Car>();
+          
             var carlist = _context.cars;
 
             if (sort == "ascending")
             {
-                // Ordena a lista de produtos por preço crescente
-                // SearchCarViewModel sortedProductsView = new SearchCarViewModel();
                 var sortedProductsGrowing = carlist.OrderBy(p => p.price);
                 return View("Index", sortedProductsGrowing.Include(c => c.Company));
             }
             else if (sort == "descending")
             {
-                // Ordena a lista de produtos por preço decrescente
-                //SearchCarViewModel sortedProductsView = new SearchCarViewModel();
                 var sortedProductsDescending = carlist.OrderByDescending(p => p.price);
                 return View("Index", sortedProductsDescending.Include(c => c.Company));
-                //return RedirectToAction(nameof(Details), new { id = id});
 
             }
             else
             {
-                // Não ordena a lista de produtos
                 return RedirectToAction(nameof(Index));
 
             }

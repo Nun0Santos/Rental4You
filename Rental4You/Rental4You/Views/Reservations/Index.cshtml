@@ -2,10 +2,91 @@
 
 @{
     ViewData["Title"] = "Index";
+    var clients= new List<string>();
+    var makers= new List<string>();
+    var categories = new List<string>();
+    var pickUpDate = new List<DateTime>();
+    var returnUpDate = new List<DateTime>();
+
+
+    clients.Add("All clients");
+    makers.Add("All makers");
+    categories.Add("All categories");
+    
+    
+    foreach (var c in Model)
+    {
+        clients.Add(c.Client.UserName);
+    }
+
+    foreach (var m in Model)
+    {
+        makers.Add(m.Car.Maker);
+    }
+
+    foreach(var c in Model)
+    {
+        categories.Add(c.Car.Type);
+    }
+
+    foreach (var d in Model)
+    {
+        pickUpDate.Add(d.Start);
+    }
+    foreach (var d in Model)
+    {
+        returnUpDate.Add(d.End);
+    }
 }
 
 <h1>All Reservations</h1>
 
+<div class="row" style="margin-left: 10px">
+    <div style="margin-left: 2px; margin-right: 5px"></div>
+      <form asp-action="GetDate" method="get">
+         <label for="sort">Pickup Date: </label>
+        <input type="datetime-local" name="date" />
+          <label for="sort">Return Date: </label>
+        <input type="datetime-local" name="date" />
+        <input name="btnSubmeter" asp-controller="Reservations" asp-action="GetDate" type="submit" value="Search" />
+      </form>
+
+    <div style="border-right: 1px solid #000; margin-left: 10px; margin-right: 10px"></div>
+    <form asp-action="GetCategories" method="get">
+            <label for="sort">Car category: </label>
+            <select name="requirement">
+                 @foreach (var c in categories)
+                 {
+                    <option value="@c">@c</option>
+                 }
+            </select>
+        <input name="btnSubmeter" asp-controller="Reservations" asp-action="GetCategories" type="submit" value="Search" />
+        </form>
+
+    <div style="border-right: 1px solid #000; margin-left: 10px; margin-right: 10px"></div>
+        <form asp-action="GetMaker" method="get">
+            <label for="sort">Car Maker: </label>
+            <select name="maker">
+                  @foreach(var c in makers)
+                  {
+                  <option value="@c">@c</option>
+                  }
+            </select>
+        <input name="btnSubmeter" asp-controller="Reservations" asp-action="GetMaker" type="submit" value="Search" />
+        </form>
+
+    <div style="border-right: 1px solid #000; margin-left: 10px; margin-right: 10px"></div>
+        <form asp-action="GetClients" method="get">
+            <label for="sort">Clients: </label>
+        <select name="client">
+                @foreach(var c in clients)
+                {
+                    <option value="@c">@c</option>
+                }
+            </select>
+            <input name="btnSubmeter" asp-controller="Reservations" asp-action="GetClients" type="submit" value="Search" />
+        </form>
+</div>
 <table class="table table-bordered table-striped table-hover">
     <thead>
         <tr>
