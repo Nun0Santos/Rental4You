@@ -2,30 +2,52 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Rental4You.Data;
 using Rental4You.Models;
+using Rental4You.ViewModels;
+using static Rental4You.Data.Initialization;
 
 namespace Rental4You.Controllers
 {
     public class CompaniesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public CompaniesController(ApplicationDbContext context)
+        public CompaniesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Companies
+        [Authorize(Roles = "Admin, Manager, Employee")]    
         public async Task<IActionResult> Index()
         {
+            if (User.IsInRole("Manager") || User.IsInRole("Employee"))
+            {
+                var user = _context.Users.Find(_userManager.GetUserId(User));
+                var companies = _context.Company.ToList();
+
+                foreach (var c in companies)
+                {
+                    if (c.Id == user.CompanyId)
+                    {
+                        return View(await _context.Company.Where(d => d.Id == c.Id).ToListAsync());
+                    }
+                }
+            }
+
               return View(await _context.Company.ToListAsync());
         }
 
         // GET: Companies/Details/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Company == null)
@@ -44,6 +66,7 @@ namespace Rental4You.Controllers
         }
 
         // GET: Companies/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -54,14 +77,33 @@ namespace Rental4You.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Id,Name,Rating")] Company company)
         {
-            ModelState.Remove(nameof(company.Employees));
-
             if (ModelState.IsValid)
             {
                 _context.Add(company);
                 await _context.SaveChangesAsync();
+
+                var manager = new ApplicationUser
+                {
+                    UserName = "manager@" + company.Name + ".com",
+                    Email = "manager@" + company.Name + ".com",
+                    Name = "Manager",
+                    Surname = company.Name,
+                    EmailConfirmed = true,
+                    PhoneNumberConfirmed = true,
+                    isActive = true,
+                };
+                var user = await _userManager.FindByEmailAsync(manager.Email);
+                if (user == null)
+                {
+                    await _userManager.CreateAsync(manager, "1234Qaz.");
+                    await _userManager.AddToRoleAsync(manager, Roles.Manager.ToString());
+                }
+
+                company.Employees.Add(manager);
+
                 return RedirectToAction(nameof(Index));
             }
             return View(company);
@@ -160,6 +202,68 @@ namespace Rental4You.Controllers
         private bool CompanyExists(int id)
         {
           return _context.Company.Any(e => e.Id == id);
+        }
+
+        public IActionResult CreateEmployees(int id)
+        {
+            var viewModel = new UserCreationViewModel();
+            viewModel.CompanyId = id;
+
+            var roles = _context.Roles;
+
+            if (User.IsInRole("Admin"))
+            {
+                ViewData["Roles"] = new SelectList(roles.Where(c => c.Name == "Manager" || c.Name == "Employee"), "Name");
+            }
+            else
+            {
+                ViewData["Roles"] = new SelectList(roles.Where(c => c.Name == "Employee"), "Name");
+            }
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateEmployees([Bind("CompanyId, UserName, Email, Name, Surname, Role")] UserCreationViewModel user)
+        {
+            var company = _context.Company.Find(user.CompanyId);
+            if (company == null)
+            {
+                return View("Error");
+            }
+
+            if (ModelState.IsValid)
+            {
+                var NewUser = new ApplicationUser
+                {
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    Name = user.Name,
+                    Surname = user.Surname,
+                    EmailConfirmed = true,
+                    PhoneNumberConfirmed = true,
+                    isActive = true,
+                };
+                var u = await _userManager.FindByEmailAsync(NewUser.Email);
+                if (u == null)
+                {
+                    await _userManager.CreateAsync(NewUser, "1234Qaz.");
+                    if (user.Role == "Employee")
+                    {
+                        await _userManager.AddToRoleAsync(NewUser, Roles.Employee.ToString());
+                    }
+                    else
+                    {
+                        await _userManager.AddToRoleAsync(NewUser, Roles.Manager.ToString());
+                    }
+                }
+                else
+                {
+                    return View("Error");
+                }
+            }
+
+            return View(user);
         }
     }
 }

@@ -39,11 +39,11 @@
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item"><a asp-controller="Cars" asp-action="Index" class="nav-link">Cars</a></li>
                     @if(User.IsInRole("Admin")){
-                        <li class="nav-item"><a asp-controller="Companies" asp-action="Index" class="nav-link">Companies</a></li>
                         <li class="nav-item"><a asp-controller="UserRolesManager" asp-action="Index" class="nav-link">Roles</a></li>
                     }
                     @if (User.IsInRole("Admin") || User.IsInRole("Manager") || User.IsInRole("Employee"))
                     {
+                        <li class="nav-item"><a asp-controller="Companies" asp-action="Index" class="nav-link">Companies</a></li>
                         <li class="nav-item"><a asp-controller="Reservations" asp-action="Index" class="nav-link">Reservations</a></li>
                         <li class="nav-item"><a asp-controller="Deliveries" asp-action="Index" class="nav-link">Deliveries</a></li>
                     }

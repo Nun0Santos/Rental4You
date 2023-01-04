@@ -1,0 +1,41 @@
+﻿@model Rental4You.ViewModels.UserCreationViewModel
+@{
+	ViewData["Title"] = "User Creation";
+}
+
+<h1 style="margin-left: 10px">Create a new user</h1>
+<hr />
+
+<div class="container" style="margin-left: 10px">
+	<form asp-action="CreateEmployees">
+		<div class="col">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<input type="hidden" asp-for="CompanyId"/>
+			<div class="form-group">
+				<label asp-for="UserName" class="control-label"></label>
+                <input asp-for="UserName" class="form-control"/>
+                <span asp-validation-for="UserName" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control"/>
+                <span asp-validation-for="Email" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control"/>
+                <span asp-validation-for="Name" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Surname" class="control-label"></label>
+                <input asp-for="Surname" class="form-control"/>
+                <span asp-validation-for="Surname" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Role" class="control-label"></label>
+                <select asp-for="Role" asp-items="ViewBag.Roles" class="form-control"></select>
+			</div>
+			<input type="submit" value="Create" class="btn btn-primary"/>
+		</div>
+	</form>
+</div>

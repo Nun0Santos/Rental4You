@@ -473,9 +473,11 @@ namespace Rental4You.Migrations
 
             modelBuilder.Entity("Rental4You.Models.ApplicationUser", b =>
                 {
-                    b.HasOne("Rental4You.Models.Company", null)
+                    b.HasOne("Rental4You.Models.Company", "Company")
                         .WithMany("Employees")
                         .HasForeignKey("CompanyId");
+
+                    b.Navigation("Company");
                 });
 
             modelBuilder.Entity("Rental4You.Models.Car", b =>

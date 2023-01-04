@@ -9,5 +9,7 @@ namespace Rental4You.Models
         public DateTime BirthDate { get; set; }
         public int TaxNumber { get; set; }
         public bool isActive { get; set; }
+        public int? CompanyId { get; set; }
+        public Company Company { get; set; }
     }
 }
