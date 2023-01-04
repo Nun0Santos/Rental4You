@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Rental4You.Data;
 using Rental4You.ViewModels;
@@ -27,22 +29,22 @@ namespace Rental4You.Models
         [Authorize(Roles = "Admin, Employee, Manager")]
         public async Task<IActionResult> Index()
         {
-            //if (User.IsInRole("Employee") || User.IsInRole("Manager"))
-            //{
-            //    var userList = _userManager.Users.ToList();
-            //    foreach (var u in userList)
-            //    {
-            //        if (u.Id == _userManager.GetUserId(User))
-            //        {
-            //            var companiesList = _context.Company;
+            if (User.IsInRole("Employee") || User.IsInRole("Manager"))
+            {
+                var userList = _context.Users.Find(_userManager.GetUserId(User));
+                var companyList = _context.Company;
 
-            //            foreach (var company in companiesList)
-            //            {
-
-            //            }
-            //        }
-            //    }
-            //}
+                foreach (var u in companyList)
+                {
+                    if (u.Employees.Contains(userList))
+                    {
+                        return View(await _context.reservations.Include(c => c.Car)
+                            .Include(c=>c.Client)
+                            .Include(c=>c.Car.Company)
+                            .Where(c =>c.Car.CompanyId == u.Id).ToListAsync());
+                    }
+                }
+            }
 
             var applicationDbContext = _context.reservations.Include(r => r.Car)
                .Include(r => r.Client)
@@ -319,5 +321,136 @@ namespace Rental4You.Models
 
             return View(await applicationDbContext.ToListAsync());
         }
+       
+
+        [Authorize(Roles = "Admin,Employee,Manager")]
+        public ActionResult GetDate(DateTime date)
+        {
+
+         return View("Index");
+
+        }
+
+        [Authorize(Roles = "Admin,Employee,Manager")]
+        public ActionResult GetCategories(string requirement)
+        {
+            if (requirement == "All categories")
+            {
+                return View("Index");
+            }
+            var reservationsList = _context.reservations;
+            var carList = _context.cars;
+
+            if (User.IsInRole("Employee") || User.IsInRole("Manager"))
+            {
+                var userList = _context.Users.Find(_userManager.GetUserId(User));
+                var companyList = _context.Company;
+
+                foreach (var u in companyList)
+                {
+                    if (u.Employees.Contains(userList))
+                    {
+                        if (requirement == "sports")
+                        {
+                            return View("Index", reservationsList
+                                .Include(c => c.Car).Include(c => c.Client)
+                                .Include(c => c.Car.Company)
+                                .Where(c => c.Car.Type == "sport" && c.Car.CompanyId == u.Id));
+                        }
+                        if (requirement == "suv")
+                        {
+                            return View("Index", reservationsList
+                                .Include(c => c.Car).Include(c => c.Client)
+                                .Include(c => c.Car.Company)
+                                .Where(c => c.Car.Type == "SUV" && c.Car.CompanyId == u.Id));
+                        }
+                    }
+                }
+            }
+            if (requirement.Equals("sport"))
+            {
+                return View("Index", reservationsList
+                                .Include(c => c.Car).Include(c => c.Client)
+                                .Include(c => c.Car.Company)
+                                .Where(c => c.Car.Type == "sport"));
+            }
+            return View("Index", reservationsList
+                              .Include(c => c.Car).Include(c => c.Client)
+                              .Include(c => c.Car.Company)
+                              .Where(c => c.Car.Type == "SUV"));
+
+        }
+
+        [Authorize(Roles = "Admin,Employee,Manager")]
+        public ActionResult GetMaker(string maker)
+        {
+            if (maker == "All makers")
+            {
+                return View("Index");
+            }
+            var reservationsList = _context.reservations;
+            var carList = _context.cars;
+
+            if (User.IsInRole("Employee") || User.IsInRole("Manager"))
+            {
+                var userList = _context.Users.Find(_userManager.GetUserId(User));
+                var companyList = _context.Company;
+
+                foreach (var u in companyList)
+                {
+                    if (u.Employees.Contains(userList))
+                    {
+                         return View("Index", reservationsList
+                                .Include(c => c.Car)
+                                .Include(c => c.Client)
+                                .Include(c => c.Car.Company)
+                                .Where(c => c.Car.CompanyId == u.Id && c.Car.Maker == maker));
+                    }
+                }
+            }
+
+            return View("Index", reservationsList
+                   .Include(c => c.Car)
+                   .Include(c => c.Client)
+                   .Include(c => c.Car.Company)
+                   .Where(c=> c.Car.Maker == maker));
+
+        }
+
+        [Authorize(Roles = "Admin,Employee,Manager")]
+        public ActionResult GetClients(string client)
+        {
+            if (client == "All clients")
+            {
+                return View("Index");
+            }
+            var reservationsList = _context.reservations;
+            var carList = _context.cars;
+
+            if (User.IsInRole("Employee") || User.IsInRole("Manager"))
+            {
+                var userList = _context.Users.Find(_userManager.GetUserId(User));
+                var companyList = _context.Company;
+
+                foreach (var u in companyList)
+                {
+                    if (u.Employees.Contains(userList))
+                    {
+                        return View("Index", reservationsList
+                               .Include(c => c.Car)
+                               .Include(c => c.Client)
+                               .Include(c => c.Car.Company)
+                               .Where(c => c.Car.CompanyId == u.Id && c.Client.UserName == client));
+                    }
+                }
+            }
+            return View("Index", reservationsList
+                               .Include(c => c.Car)
+                               .Include(c => c.Client)
+                               .Include(c => c.Car.Company)
+                               .Where(c => c.Client.UserName == client));
+
+        }
+
     }
 }

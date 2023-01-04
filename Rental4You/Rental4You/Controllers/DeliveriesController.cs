@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Rental4You.Data;
+using static Rental4You.Data.Initialization;
 
 namespace Rental4You.Models
 {
@@ -22,8 +24,29 @@ namespace Rental4You.Models
         }
 
         // GET: Deliveries
+        [Authorize(Roles = "Admin, Employee, Manager")]
         public async Task<IActionResult> Index()
         {
+            if (User.IsInRole("Employee") || User.IsInRole("Manager"))
+            {
+                var userList = _context.Users.Find(_userManager.GetUserId(User));
+                var companyList = _context.Company;
+
+                foreach (var u in companyList)
+                {
+                    if (u.Employees.Contains(userList))
+                    {
+                        return View(await _context.deliveries
+                            .Include(c => c.Car)
+                            .Include(c => c.Car.Company)
+                            .Include(d => d.Employee)
+                            .Include(d => d.Reservation)
+                            .Include(c => c.Reservation.Client)
+                            .Where(c => c.Car.CompanyId == u.Id && c.isReceived == true).ToListAsync());
+                    }
+                }
+            }
+
             var applicationDbContext = _context.deliveries.Include(d => d.Car)
                 .Include(c => c.Car.Company)
                 .Include(d => d.Employee)
@@ -33,8 +56,28 @@ namespace Rental4You.Models
             return View(await applicationDbContext.ToListAsync());
         }
 
+        [Authorize(Roles = "Admin, Employee, Manager")]
         public async Task<IActionResult> DeliveryRequests(int id)
         {
+            if (User.IsInRole("Employee") || User.IsInRole("Manager"))
+            {
+                var userList = _context.Users.Find(_userManager.GetUserId(User));
+                var companyList = _context.Company;
+
+                foreach (var u in companyList)
+                {
+                    if (u.Employees.Contains(userList))
+                    {
+                        return View(await _context.deliveries
+                            .Include(c => c.Car)
+                            .Include(c => c.Car.Company)
+                            .Include(d => d.Employee)
+                            .Include(d => d.Reservation)
+                            .Include(c => c.Reservation.Client)
+                            .Where(c => c.Car.CompanyId == u.Id && c.isReceived == false).ToListAsync());
+                    }
+                }
+            }
             var applicationDbContext = _context.deliveries.Include(d => d.Car)
                 .Include(c => c.Car.Company)
                 .Include(d => d.Employee)
