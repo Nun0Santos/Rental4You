@@ -36,7 +36,7 @@ namespace Rental4You.Models
 
                 foreach (var u in companyList)
                 {
-                    if (u.Employees.Contains(userList))
+                    if (u.Id == userList.CompanyId)
                     {
                         return View(await _context.reservations.Include(c => c.Car)
                             .Include(c=>c.Client)
@@ -164,7 +164,7 @@ namespace Rental4You.Models
                 {
                     return RedirectToAction(nameof(MyReservations));
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(MyReservations));
             }
             ViewData["CarId"] = new SelectList(_context.cars, "Id", "Id", reservation.CarId);
             ViewData["ClientId"] = new SelectList(_context.Users, "Id", "Id", reservation.ClientId);
@@ -334,10 +334,6 @@ namespace Rental4You.Models
         [Authorize(Roles = "Admin,Employee,Manager")]
         public ActionResult GetCategories(string requirement)
         {
-            if (requirement == "All categories")
-            {
-                return View("Index");
-            }
             var reservationsList = _context.reservations;
             var carList = _context.cars;
 
@@ -348,8 +344,15 @@ namespace Rental4You.Models
 
                 foreach (var u in companyList)
                 {
-                    if (u.Employees.Contains(userList))
+                    if (u.Id == userList.CompanyId)
                     {
+                        if (requirement == "All categories")
+                        {
+                            return View("Index", reservationsList
+                            .Include(c => c.Car).Include(c => c.Client)
+                            .Include(c => c.Car.Company)
+                            .Where(c => c.Car.CompanyId == u.Id));
+                        }
                         if (requirement == "sports")
                         {
                             return View("Index", reservationsList
@@ -366,6 +369,13 @@ namespace Rental4You.Models
                         }
                     }
                 }
+            }
+
+            if (requirement == "All categories")
+            {
+                return View("Index", reservationsList
+                .Include(c => c.Car).Include(c => c.Client)
+                .Include(c => c.Car.Company));
             }
             if (requirement.Equals("sport"))
             {
@@ -384,10 +394,6 @@ namespace Rental4You.Models
         [Authorize(Roles = "Admin,Employee,Manager")]
         public ActionResult GetMaker(string maker)
         {
-            if (maker == "All makers")
-            {
-                return View("Index");
-            }
             var reservationsList = _context.reservations;
             var carList = _context.cars;
 
@@ -398,9 +404,17 @@ namespace Rental4You.Models
 
                 foreach (var u in companyList)
                 {
-                    if (u.Employees.Contains(userList))
+                    if (u.Id == userList.CompanyId)
                     {
-                         return View("Index", reservationsList
+                        if (maker == "All makers")
+                        {
+                            return View("Index", reservationsList
+                                .Include(c => c.Car)
+                                .Include(c => c.Client)
+                                .Include(c => c.Car.Company)
+                                .Where(c => c.Car.CompanyId == u.Id));
+                        }
+                        return View("Index", reservationsList
                                 .Include(c => c.Car)
                                 .Include(c => c.Client)
                                 .Include(c => c.Car.Company)
@@ -409,6 +423,13 @@ namespace Rental4You.Models
                 }
             }
 
+            if (maker == "All makers")
+            {
+                return View("Index", reservationsList
+                    .Include(c => c.Car)
+                    .Include(c => c.Client)
+                    .Include(c => c.Car.Company));
+            }
             return View("Index", reservationsList
                    .Include(c => c.Car)
                    .Include(c => c.Client)
@@ -420,10 +441,6 @@ namespace Rental4You.Models
         [Authorize(Roles = "Admin,Employee,Manager")]
         public ActionResult GetClients(string client)
         {
-            if (client == "All clients")
-            {
-                return View("Index");
-            }
             var reservationsList = _context.reservations;
             var carList = _context.cars;
 
@@ -434,8 +451,16 @@ namespace Rental4You.Models
 
                 foreach (var u in companyList)
                 {
-                    if (u.Employees.Contains(userList))
+                    if (u.Id == userList.CompanyId)
                     {
+                        if (client == "All clients")
+                        {
+                            return View("Index", reservationsList
+                                       .Include(c => c.Car)
+                                       .Include(c => c.Client)
+                                       .Include(c => c.Car.Company)
+                                       .Where(c => c.Car.CompanyId == u.Id));
+                        }
                         return View("Index", reservationsList
                                .Include(c => c.Car)
                                .Include(c => c.Client)
@@ -444,6 +469,15 @@ namespace Rental4You.Models
                     }
                 }
             }
+
+            if (client == "All clients")
+            {
+                return View("Index", reservationsList
+                           .Include(c => c.Car)
+                           .Include(c => c.Client)
+                           .Include(c => c.Car.Company));
+            }
+
             return View("Index", reservationsList
                                .Include(c => c.Car)
                                .Include(c => c.Client)

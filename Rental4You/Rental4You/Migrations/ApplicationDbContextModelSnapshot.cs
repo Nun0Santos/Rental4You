@@ -311,7 +311,7 @@ namespace Rental4You.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("cars");
+                    b.ToTable("cars", (string)null);
                 });
 
             modelBuilder.Entity("Rental4You.Models.Company", b =>
@@ -334,7 +334,7 @@ namespace Rental4You.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Company");
+                    b.ToTable("Company", (string)null);
                 });
 
             modelBuilder.Entity("Rental4You.Models.Delivery", b =>
@@ -378,7 +378,7 @@ namespace Rental4You.Migrations
 
                     b.HasIndex("ReservationId");
 
-                    b.ToTable("deliveries");
+                    b.ToTable("deliveries", (string)null);
                 });
 
             modelBuilder.Entity("Rental4You.Models.Reservation", b =>
@@ -417,7 +417,7 @@ namespace Rental4You.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.ToTable("reservations");
+                    b.ToTable("reservations", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

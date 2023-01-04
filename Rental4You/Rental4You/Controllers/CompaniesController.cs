@@ -41,13 +41,15 @@ namespace Rental4You.Controllers
                         return View(await _context.Company.Where(d => d.Id == c.Id).ToListAsync());
                     }
                 }
+
+                return View("Error");
             }
 
               return View(await _context.Company.ToListAsync());
         }
 
         // GET: Companies/Details/5
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Manager, Employee")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Company == null)
@@ -80,6 +82,7 @@ namespace Rental4You.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Id,Name,Rating")] Company company)
         {
+            ModelState.Remove(nameof(company.Employees));
             if (ModelState.IsValid)
             {
                 _context.Add(company);
@@ -94,6 +97,7 @@ namespace Rental4You.Controllers
                     EmailConfirmed = true,
                     PhoneNumberConfirmed = true,
                     isActive = true,
+                    CompanyId = company.Id,
                 };
                 var user = await _userManager.FindByEmailAsync(manager.Email);
                 if (user == null)
@@ -102,14 +106,13 @@ namespace Rental4You.Controllers
                     await _userManager.AddToRoleAsync(manager, Roles.Manager.ToString());
                 }
 
-                company.Employees.Add(manager);
-
                 return RedirectToAction(nameof(Index));
             }
             return View(company);
         }
 
         // GET: Companies/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Company == null)
@@ -130,6 +133,7 @@ namespace Rental4You.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Rating")] Company company)
         {
             if (id != company.Id)
@@ -163,6 +167,7 @@ namespace Rental4You.Controllers
         }
 
         // GET: Companies/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Company == null)
@@ -183,6 +188,7 @@ namespace Rental4You.Controllers
         // POST: Companies/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Company == null)
@@ -204,6 +210,7 @@ namespace Rental4You.Controllers
           return _context.Company.Any(e => e.Id == id);
         }
 
+        [Authorize(Roles = "Admin, Manager")]
         public IActionResult CreateEmployees(int id)
         {
             var viewModel = new UserCreationViewModel();
@@ -211,15 +218,7 @@ namespace Rental4You.Controllers
 
             var roles = _context.Roles;
 
-            if (User.IsInRole("Admin"))
-            {
-                ViewData["Roles"] = new SelectList(roles.Where(c => c.Name == "Manager" || c.Name == "Employee"), "Name");
-            }
-            else
-            {
-                ViewData["Roles"] = new SelectList(roles.Where(c => c.Name == "Employee"), "Name");
-            }
-
+            ViewData["Roles"] = new SelectList(roles.Where(c => c.Name == "Manager" || c.Name == "Employee"), "Name");
             return View(viewModel);
         }
 
@@ -243,6 +242,7 @@ namespace Rental4You.Controllers
                     EmailConfirmed = true,
                     PhoneNumberConfirmed = true,
                     isActive = true,
+                    CompanyId = user.CompanyId,
                 };
                 var u = await _userManager.FindByEmailAsync(NewUser.Email);
                 if (u == null)
@@ -256,6 +256,8 @@ namespace Rental4You.Controllers
                     {
                         await _userManager.AddToRoleAsync(NewUser, Roles.Manager.ToString());
                     }
+
+                    company.Employees.Add(NewUser);
                 }
                 else
                 {
@@ -263,7 +265,35 @@ namespace Rental4You.Controllers
                 }
             }
 
-            return View(user);
+            return RedirectToAction(nameof(Index));
+        }
+
+        [Authorize(Roles = "Manager")]
+        public IActionResult Employees(int id)
+        {
+            var employees = _context.Users;
+
+            return View(employees.Where(c => c.Id != _userManager.GetUserId(User) && c.CompanyId == id));
+        }
+
+        [Authorize(Roles = "Manager")]
+        public async Task<IActionResult> ActivateEmployees(string id)
+        {
+            var employee = _context.Users.Find(id);
+            if (employee.isActive)
+            {
+                employee.isActive = false;
+                _context.Update(employee);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Employees), new {id = employee.CompanyId});
+            }
+
+            employee.isActive = true;
+            _context.Update(employee);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Employees), new { id = employee.CompanyId });
         }
     }
 }
