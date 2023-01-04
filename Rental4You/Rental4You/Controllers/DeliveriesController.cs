@@ -34,7 +34,7 @@ namespace Rental4You.Models
 
                 foreach (var u in companyList)
                 {
-                    if (u.Employees.Contains(userList))
+                    if (u.Id == userList.CompanyId)
                     {
                         return View(await _context.deliveries
                             .Include(c => c.Car)
@@ -66,7 +66,7 @@ namespace Rental4You.Models
 
                 foreach (var u in companyList)
                 {
-                    if (u.Employees.Contains(userList))
+                    if (u.Id == userList.CompanyId)
                     {
                         return View(await _context.deliveries
                             .Include(c => c.Car)

@@ -136,6 +136,7 @@ namespace Rental4You.Areas.Identity.Pages.Account
                 user.Surname = Input.Surname;
                 user.BirthDate = Input.BirthDate;
                 user.TaxNumber = Input.TaxNumber;
+                user.isActive = true;
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);

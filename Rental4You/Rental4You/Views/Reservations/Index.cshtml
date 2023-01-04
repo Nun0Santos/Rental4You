@@ -158,8 +158,11 @@
                 @Html.DisplayFor(modelItem => item.Confirmed)
             </td>
             <td>
-                @if(!item.Confirmed){
-                    <a asp-action="confirmReservation" asp-route-id="@item.Id" class="btn-success btn">Confirm</a>
+                @if(!User.IsInRole("Admin")){
+                    @if(!item.Confirmed){
+                        <a asp-action="confirmReservation" asp-route-id="@item.Id" class="btn-success btn">Confirm</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn-danger btn">Delete</a>
+                    }
                 }
                 <a asp-action="Details" asp-route-id="@item.Id" class="btn-primary btn">Details</a>
             </td>

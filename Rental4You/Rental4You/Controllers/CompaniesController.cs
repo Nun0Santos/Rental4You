@@ -80,7 +80,7 @@ namespace Rental4You.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([Bind("Id,Name,Rating")] Company company)
+        public async Task<IActionResult> Create([Bind("Id,Name,Rating,isActive")] Company company)
         {
             ModelState.Remove(nameof(company.Employees));
             if (ModelState.IsValid)
@@ -134,7 +134,7 @@ namespace Rental4You.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Rating")] Company company)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Rating,isActive")] Company company)
         {
             if (id != company.Id)
             {
@@ -196,10 +196,18 @@ namespace Rental4You.Controllers
                 return Problem("Entity set 'ApplicationDbContext.Company'  is null.");
             }
             var company = await _context.Company.FindAsync(id);
+            var cars = _context.cars.Where(c => c.CompanyId == id);
+            if (cars.Count() > 0)
+            {
+                return View("Error");
+            }
+            
             if (company != null)
             {
                 _context.Company.Remove(company);
             }
+
+
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

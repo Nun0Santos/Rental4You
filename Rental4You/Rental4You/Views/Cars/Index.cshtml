@@ -90,23 +90,27 @@
                             </div>
                             <div class="text row">
                                 <div class="col">
-                                    <h6 class="mb-0">@Html.DisplayFor(modelItem => item.Maker)</h6>
+                                    <h6 class="mb-0 text-success">@Html.DisplayFor(modelItem => item.Maker)</h6>
                                     <div class="d-flex mb-3">
                                         <span class="cat">@Html.DisplayFor(modelItem => item.Model)</span>
                                     </div>
                                 </div>
                                 <div class="col">
-                                    <h6 class="mb-0">@Html.DisplayFor(modelItem => item.Company.Name)</h6>
+                                    <h6 class="mb-0 text-primary">@Html.DisplayFor(modelItem => item.Company.Name)</h6>
                                     <div class="d-flex mb-3">
-                                        <span class="cat">@Html.DisplayFor(modelItem => item.Company.Rating)</span>
+                                        <span class="cat">@Html.DisplayFor(modelItem => item.Company.Rating) <span class="text-warning icon-star"></span>
                                     </div>
                                 </div>
                                 <div class="col">
-                                    <h6 class="mb-0">@Html.DisplayFor(modelItem => item.price)<span class=" icon-euro_symbol"></span></h6>
+                                    <h6 class="mb-0 text-warning">@Html.DisplayFor(modelItem => item.price)<span class="text-warning icon-euro_symbol"></span></h6>
                                     <div class="d-flex mb-3">
                                         <span class="cat">per day</span>
                                     </div>
                                 </div>
+                                    @if (!item.isActive && (User.IsInRole("Manager") || User.IsInRole("Employee")))
+                                    {
+                                        <span class="text-danger icon-ban"></span>
+                                    }
 
                                 <p class="d-flex mb-0 d-block">
                                     <a asp-controller="Reservations" asp-action="Booking" asp-route-id="@item.Id" class="btn btn-primary">Rent</a>

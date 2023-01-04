@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Rental4You.Data;
 using Rental4You.Models;
 using Rental4You.ViewModels;
 
@@ -10,10 +11,12 @@ namespace Rental4You.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        public UserRolesManagerController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        private readonly ApplicationDbContext _context;
+        public UserRolesManagerController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, ApplicationDbContext context)
         {
             this._userManager = userManager;
             this._roleManager = roleManager;
+            _context = context;
         }
         public async Task<IActionResult> Index()
         {
@@ -27,6 +30,7 @@ namespace Rental4You.Controllers
                 user.UserName = u.UserName;
                 user.Name = u.Name;
                 user.Surname = u.Surname;
+                user.isActive = u.isActive;
                 user.Roles = await GetUserRoles(u);
                 userRoles.Add(user);
             }
@@ -88,6 +92,40 @@ namespace Rental4You.Controllers
             }
 
             return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> ActivateUser(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return View("Error");
+            }
+            if (user.isActive)
+            {
+                user.isActive = false;
+                _context.Update(user);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+
+            user.isActive = true;
+            _context.Update(user);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> DeleteUser(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return View("Error");
+            }
+
+            _context.Remove(user);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
     }
 }

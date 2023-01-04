@@ -275,6 +275,9 @@ namespace Rental4You.Models
             {
                 return Problem("This reservation has already been confirmed");
             }
+
+            var car = _context.cars.Find(reservation.CarId);
+            car.isReserved = false;
             
             if (reservation != null)
             {

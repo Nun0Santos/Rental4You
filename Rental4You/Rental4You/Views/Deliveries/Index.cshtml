@@ -6,9 +6,12 @@
 
 <h1 style="margin-left: 10px">Deliveries</h1>
 
-<p style="margin-left: 10px">
-    <a asp-action="DeliveryRequests" class="btn-warning btn">Requests</a>
-</p>
+@if (!User.IsInRole("Admin"))
+{
+    <p style="margin-left: 10px">
+        <a asp-action="DeliveryRequests" class="btn-warning btn">Requests</a>
+    </p>
+}
 <table class="table table-bordered table-striped table-hover">
     <thead>
         <tr>
@@ -28,7 +31,7 @@
                 Car Image
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Employee)
+                Approved by
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.DateOfDelivery)
