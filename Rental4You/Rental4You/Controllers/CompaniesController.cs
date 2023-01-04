@@ -303,5 +303,21 @@ namespace Rental4You.Controllers
 
             return RedirectToAction(nameof(Employees), new { id = employee.CompanyId });
         }
+
+        public async Task<IActionResult> GetName(string requirement)
+        {
+            var companyList = _context.Company;
+            return View("Index", companyList.Where(c => c.Name == requirement));
+        }
+
+        public async Task<IActionResult> GetState(string requirement)
+        {
+            var companyList = _context.Company;
+            if(requirement == "Active")
+                return View("Index", companyList.Where(c => c.isActive == true));
+
+            return View("Index", companyList.Where(c => c.isActive == false));
+
+        }
     }
 }

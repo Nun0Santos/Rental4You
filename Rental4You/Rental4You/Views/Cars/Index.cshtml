@@ -4,6 +4,17 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout2.cshtml";
 
+    var state = new List<string>();
+    state.Add("All states");
+
+    foreach(var s in Model)
+    {
+        if(state.Contains(s.state))
+            continue;
+
+        state.Add(s.state);
+    }
+
 }
 <html>
 <body>
@@ -37,15 +48,6 @@
                 <input name="btnSubmeter" asp-controller="Cars" asp-action="GetProducts" type="submit" value="Search" />
             </form>
             <div style="border-right: 1px solid #000; margin-left: 10px; margin-right: 10px"></div>
-            <form asp-action="OrderByRating" method="get">
-                <label for="sort">Company rating: </label>
-                <select name="requirement">
-                    <option value="ascending">Ascending</option>
-                    <option value="descending">Descending</option>
-                </select>
-                <input name="btnSubmeter" asp-controller="Cars" asp-action="OrderByRating" type="submit" value="Search" />
-            </form>
-            <div style="border-right: 1px solid #000; margin-left: 10px; margin-right: 10px"></div>
             <form asp-action="GetCategories" method="get">
                 <label for="sort">Car category: </label>
                 <select name="requirement">
@@ -67,6 +69,34 @@
                 </select>
                 <input name="btnSubmeter" asp-controller="Cars" asp-action="GetFuel" type="submit" value="Search" />
             </form>
+
+             @if (User.IsInRole("Manager") || User.IsInRole("Employee"))
+            {
+               
+                <div style="border-right: 1px solid #000; margin-left: 10px; margin-right: 10px"></div>
+                <form asp-action="getState" method="get">
+                    <label for="sort">State: </label>
+                        <select name="requirement">
+                            @foreach (var s in state)
+                             {
+                                <option value="@s">@s</option>
+                             }
+                        </select>
+                        <input name="btnSubmeter" asp-controller="Cars" asp-action="getState" type="submit" value="Search" />
+                 </form>
+            }
+            else
+            {
+                 <div style="border-right: 1px solid #000; margin-left: 10px; margin-right: 10px"></div>
+                <form asp-action="OrderByRating" method="get">
+                    <label for="sort">Company rating: </label>
+                    <select name="requirement">
+                        <option value="ascending">Ascending</option>
+                        <option value="descending">Descending</option>
+                    </select>
+                    <input name="btnSubmeter" asp-controller="Cars" asp-action="OrderByRating" type="submit" value="Search" />
+                </form>
+            }
         </div>
         <div class="container" style="margin-top: 20px">
             <div class="row">

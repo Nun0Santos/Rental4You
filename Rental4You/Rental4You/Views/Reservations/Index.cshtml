@@ -5,37 +5,34 @@
     var clients= new List<string>();
     var makers= new List<string>();
     var categories = new List<string>();
-    var pickUpDate = new List<DateTime>();
-    var returnUpDate = new List<DateTime>();
-
+    
 
     clients.Add("All clients");
     makers.Add("All makers");
     categories.Add("All categories");
-    
-    
+
+
     foreach (var c in Model)
     {
-        clients.Add(c.Client.UserName);
+        if (clients.Contains(c.Client.UserName))
+            continue;
+
+        clients.Add(c.Client.UserName);  
     }
 
     foreach (var m in Model)
     {
+        if (makers.Contains(m.Car.Maker))
+            continue;
+
         makers.Add(m.Car.Maker);
     }
 
     foreach(var c in Model)
     {
+        if (categories.Contains(c.Car.Type))
+          continue;
         categories.Add(c.Car.Type);
-    }
-
-    foreach (var d in Model)
-    {
-        pickUpDate.Add(d.Start);
-    }
-    foreach (var d in Model)
-    {
-        returnUpDate.Add(d.End);
     }
 }
 
@@ -45,9 +42,9 @@
     <div style="margin-left: 2px; margin-right: 5px"></div>
       <form asp-action="GetDate" method="get">
          <label for="sort">Pickup Date: </label>
-        <input type="datetime-local" name="date" />
+        <input type="datetime-local" name="pickUpdate" />
           <label for="sort">Return Date: </label>
-        <input type="datetime-local" name="date" />
+        <input type="datetime-local" name="returnDate" />
         <input name="btnSubmeter" asp-controller="Reservations" asp-action="GetDate" type="submit" value="Search" />
       </form>
 

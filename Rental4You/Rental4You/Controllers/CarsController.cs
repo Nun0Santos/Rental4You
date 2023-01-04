@@ -514,6 +514,30 @@ namespace Rental4You.Controllers
             }
             return View("Index", carlist.Include(c => c.Company).Where(c => c.isActive == true && c.isReserved == false));
         }
+
+        [Authorize(Roles = "Employee, Manager")]
+
+        public ActionResult getState(string requirement)
+        {
+            var carlist = _context.cars.Include(c => c.Company);
+            var userList = _context.Users.Find(_userManager.GetUserId(User));
+
+            var companyList = _context.Company;
+
+            foreach (var u in companyList)
+            {
+                if (u.Id == userList.CompanyId)
+                {
+                    return View("Index", carlist
+                        .Include(c => c.Company)
+                        .Where(c => c.CompanyId == u.Id && c.state == requirement));
+                }
+            }
+            return View("Index", carlist
+                       .Include(c => c.Company)
+                       .Where(c => c.state == requirement));
+        }
+
     }
 }
   

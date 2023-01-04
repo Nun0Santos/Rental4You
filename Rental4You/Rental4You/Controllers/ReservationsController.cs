@@ -327,12 +327,35 @@ namespace Rental4You.Models
        
 
         [Authorize(Roles = "Admin,Employee,Manager")]
-        public ActionResult GetDate(DateTime date)
+        public ActionResult GetDate(DateTime pickUpdate, DateTime returnDate)
         {
+            var reservationsList = _context.reservations;
+            var carList = _context.cars;
 
-         return View("Index");
+            if (User.IsInRole("Employee") || User.IsInRole("Manager"))
+            {
+                var userList = _context.Users.Find(_userManager.GetUserId(User));
+                var companyList = _context.Company;
 
-        }
+                foreach (var u in companyList)
+                {
+                    if (u.Id == userList.CompanyId)
+                    {
+
+                        return View("Index", reservationsList
+                                   .Include(c => c.Car)
+                                   .Include(c => c.Client)
+                                   .Include(c => c.Car.Company)
+                                   .Where(c => c.Car.CompanyId == u.Id && c.Start.Date >= pickUpdate.Date && c.End.Date <= returnDate.Date));
+                    }
+                }
+            }
+             return View("Index", reservationsList
+                                      .Include(c => c.Car)
+                                      .Include(c => c.Client)
+                                      .Include(c => c.Car.Company)
+                                      .Where(c => c.Start.Date >= pickUpdate.Date && c.End.Date <= returnDate.Date));
+            }
 
         [Authorize(Roles = "Admin,Employee,Manager")]
         public ActionResult GetCategories(string requirement)

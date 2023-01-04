@@ -2,16 +2,51 @@
 
 @{
     ViewData["Title"] = "Index";
+    var name = new List<string>();
+    name.Add("All names");
+
+    foreach(var n in Model)
+    {
+        if(name.Contains(n.Name))
+            continue;
+        name.Add(n.Name);
+    }
 }
 
 <h1>Companies</h1>
-
 @if (User.IsInRole("Admin"))
 {
     <p style="padding-left: 10px">
         <a asp-action="Create" class="btn-primary btn">Create New</a>
     </p>
 }
+  @if (User.IsInRole("Admin"))
+  {
+   <div class="row" style="margin-left: 2px">
+        <div style="margin-left: 10px; margin-right: 10px"></div>
+        <form asp-action="GetName" method="get">
+            <label for="sort">Companies name: </label>
+            <select name="requirement">
+                    @foreach (var n in name)
+                    {
+                        <option value="@n">@n</option>
+                    }
+            </select>
+            <input name="btnSubmeter" asp-controller="Companies" asp-action="GetName" type="submit" value="Search" />
+        </form>
+        <div style="border-right: 1px solid #000; margin-left: 10px; margin-right: 10px"></div>
+        <form asp-action="GetState" method="get">
+            <label for="sort">isActive: </label>
+            <select name="requirement">
+                <option value="all">All states</option>
+                <option value="Active">Active</option>
+                <option value="inactive">inactive</option>
+            </select>
+            <input name="btnSubmeter" asp-controller="Companies" asp-action="GetState" type="submit" value="Search" />
+        </form>
+    </div>
+  }
+      
 <table class="table table-striped table-hover table-bordered" style="padding-left:10px">
     <thead>
         <tr>
