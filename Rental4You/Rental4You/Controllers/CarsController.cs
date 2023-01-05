@@ -30,6 +30,8 @@ namespace Rental4You.Controllers
 
         public async Task<IActionResult> Index()
         {
+            ViewData["categories"] = new SelectList(_context.categories.Where(c => c.isActive == true), "Id", "Name");
+
             if (User.IsInRole("Employee") || User.IsInRole("Manager"))
             {
                 var userList = _context.Users.Find(_userManager.GetUserId(User));
@@ -40,6 +42,7 @@ namespace Rental4You.Controllers
                     if (u.Id == userList.CompanyId)
                     {
                         return View(await _context.cars.Include(c => c.Company)
+                            .Include(c => c.Category)
                             .Where(c => c.CompanyId == u.Id).ToListAsync());
                        
                     }
@@ -47,7 +50,8 @@ namespace Rental4You.Controllers
             }
 
 
-            return View(await _context.cars.Include(c => c.Company).Where(c => c.isActive == true && c.isReserved == false && c.Company.isActive == true).ToListAsync());
+            return View(await _context.cars.Include(c => c.Company).Where(c => c.isActive == true && c.isReserved == false 
+            && c.Company.isActive == true && c.Category.isActive == true).ToListAsync());
         }
 
         // GET: Cars/Details/5
@@ -72,6 +76,7 @@ namespace Rental4You.Controllers
         [Authorize(Roles = "Employee, Manager")]
         public IActionResult Create()
         {
+            ViewData["categories"] = new SelectList(_context.categories.Where(c => c.isActive), "Id", "Name");
             return View();
         }
 
@@ -81,10 +86,12 @@ namespace Rental4You.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Employee, Manager")]
-        public async Task<IActionResult> Create([Bind("Id,Maker,Model,Type,Transmission,Seats,Year,LicensePlate,Location,Km,state,price,fuel, CompanyId")] Car car, [FromForm] List<IFormFile> files)
+        public async Task<IActionResult> Create([Bind("Id,Maker,Model,CategoryId,Transmission,Seats,Year,LicensePlate,Location,Km,state,price,fuel, CompanyId")] Car car, [FromForm] List<IFormFile> files)
         {
             ViewData["Companies"] = new SelectList(_context.Company.ToList(), "Id", "Name");
+            ViewData["categories"] = new SelectList(_context.categories.Where(c => c.isActive), "Id", "Name");
             ModelState.Remove(nameof(car.Company));
+            ModelState.Remove(nameof(car.Category));
 
             car.isActive = true;
             car.isReserved = false;
@@ -137,6 +144,7 @@ namespace Rental4You.Controllers
             }
 
             ViewData["Companies"] = new SelectList(_context.Company.ToList(), "Id", "Name");
+            ViewData["categories"] = new SelectList(_context.categories.Where(c => c.isActive == true).ToList(), "Id", "Name");
 
             return View(car);
         }
@@ -147,11 +155,13 @@ namespace Rental4You.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Employee, Manager")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Maker,Model,Type,Transmission,Seats,Year,LicensePlate,Location,Km,state, price, fuel, CompanyId, isActive, isReserved")] Car car, [FromForm]List<IFormFile> files)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Maker,Model,CategoryId,Transmission,Seats,Year,LicensePlate,Location,Km,state, price, fuel, CompanyId, isActive, isReserved")] Car car, [FromForm]List<IFormFile> files)
         {
+            ViewData["categories"] = new SelectList(_context.categories.Where(c => c.isActive == true).ToList(), "Id", "Name");
             ViewData["Companies"] = new SelectList(_context.Company.ToList(), "Id", "Name");
 
             ModelState.Remove(nameof(car.Company));
+            ModelState.Remove(nameof(car.Category));
 
             if (id != car.Id)
             {
@@ -267,6 +277,7 @@ namespace Rental4You.Controllers
         }
         public async Task<IActionResult> Search([Bind("PickupLocation,VehicleType,PickupDate,ReturnDate")] SearchCarViewModel search)
         {
+            ViewData["categories"] = new SelectList(_context.categories.Where(c => c.isActive == true), "Id", "Name");
             if (User.IsInRole("Employee") || User.IsInRole("Manager"))
             {
                 return View("../Home");
@@ -275,15 +286,15 @@ namespace Rental4You.Controllers
 
             if (string.IsNullOrWhiteSpace(search.VehicleType) && string.IsNullOrWhiteSpace(search.PickupLocation))
             {
-                searchCar.ListOfCars = await _context.cars.Include(c => c.Company).Where(c => c.isActive == true && c.isReserved == false && c.Company.isActive == true).ToListAsync();
+                searchCar.ListOfCars = await _context.cars.Include(c => c.Company).Include(c => c.Category)
+                    .Where(c => c.isActive == true && c.isReserved == false && c.Company.isActive == true && c.Category.isActive == true).ToListAsync();
                 return View(searchCar);
             }
 
             if (string.IsNullOrWhiteSpace(search.PickupLocation))
             {
-                searchCar.ListOfCars = await _context.cars.Include(c => c.Company)
-                    .Where(c => c.Type.Contains(search.VehicleType)
-                         && c.isActive == true && c.isReserved == false && c.Company.isActive == true).ToListAsync();
+                searchCar.ListOfCars = await _context.cars.Include(c => c.Company).Include(c => c.Category)
+                    .Where(c => c.isActive == true && c.isReserved == false && c.Company.isActive == true && c.Category.Id == int.Parse(search.VehicleType)).ToListAsync();
 
                 searchCar.TextToSearch = search.VehicleType;
                 searchCar.NumberOfResults = searchCar.ListOfCars.Count();
@@ -293,8 +304,8 @@ namespace Rental4You.Controllers
 
             if (string.IsNullOrWhiteSpace(search.VehicleType))
             {
-                searchCar.ListOfCars = await _context.cars.Include(c => c.Company).
-                   Where(c => c.Location.Contains(search.PickupLocation)
+                searchCar.ListOfCars = await _context.cars.Include(c => c.Company).Include(c => c.Category)
+                   .Where(c => c.Location.Contains(search.PickupLocation)
                         && c.isActive == true && c.isReserved == false && c.Company.isActive == true).ToListAsync();
 
                 searchCar.TextToSearch = search.PickupLocation;
@@ -304,42 +315,15 @@ namespace Rental4You.Controllers
 
             }
             
-            searchCar.ListOfCars = await _context.cars.Include(c => c.Company).
-                    Where(c => c.Type.Contains(search.VehicleType) &&  c.Location.Contains(search.PickupLocation)
-                         && c.isActive == true && c.isReserved == false && c.Company.isActive == true).ToListAsync();
+            searchCar.ListOfCars = await _context.cars.Include(c => c.Company).Include(c => c.Category)
+                .Where(c => c.Category.Id == int.Parse(search.VehicleType) &&  c.Location.Contains(search.PickupLocation)
+                         && c.isActive == true && c.isReserved == false && c.Company.isActive == true && c.Category.isActive == true).ToListAsync();
 
             searchCar.TextToSearch = search.PickupLocation + " Type: " + search.VehicleType;
             searchCar.NumberOfResults = searchCar.ListOfCars.Count();
 
             return View(searchCar);
-
         }
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Search([Bind("PickupLocation,VehicleType,PickupDate,ReturnDate")] SearchCarViewModel searchCar )
-        //{
-
-        //    if (string.IsNullOrEmpty(searchCar.TextToSearch))
-        //    {
-        //        searchCar.ListOfCars =
-        //            await _context.cars.Include("marca").ToListAsync();
-
-        //        searchCar.NumberOfResults = searchCar.ListOfCars.Count();
-        //    }
-        //    else
-        //    {
-        //        searchCar.ListOfCars =
-        //            await _context.cars.Include(c => c.Maker).Where(
-        //                c => c.Maker.Contains(searchCar.TextToSearch)
-        //                ).ToListAsync();
-
-        //        searchCar.NumberOfResults = searchCar.ListOfCars.Count();
-
-        //    }
-
-        //    return View(searchCar);
-        //}
         public ActionResult GetProducts(string sort)
         {
           
@@ -356,12 +340,12 @@ namespace Rental4You.Controllers
                     {
                         if (sort == "ascending")
                         {
-                            return View("Index", _context.cars.OrderBy(p => p.price).Include(c => c.Company)
-                            .Where(c => c.CompanyId == u.Id));
+                            return View("Index", _context.cars.OrderBy(p => p.price).Include(c => c.Company).Include(c => c.Category)
+                            .Where(c => c.CompanyId == u.Id && c.Category.isActive == true));
                         }
 
-                        return View("Index", _context.cars.OrderByDescending(p => p.price).Include(c => c.Company)
-                            .Where(c => c.CompanyId == u.Id));
+                        return View("Index", _context.cars.OrderByDescending(p => p.price).Include(c => c.Company).Include(c => c.Category)
+                            .Where(c => c.CompanyId == u.Id && c.Category.isActive == true));
                     }
                 }
             }
@@ -369,12 +353,14 @@ namespace Rental4You.Controllers
             if (sort == "ascending")
             {
                 var sortedProductsGrowing = carlist.OrderBy(p => p.price);
-                return View("Index", sortedProductsGrowing.Include(c => c.Company).Where(c => c.isActive == true && c.isReserved == false && c.Company.isActive == true));
+                return View("Index", sortedProductsGrowing.Include(c => c.Company).Include(c => c.Category)
+                                    .Where(c => c.isActive == true && c.isReserved == false && c.Company.isActive == true && c.Category.isActive == true));
             }
             else if (sort == "descending")
             {
                 var sortedProductsDescending = carlist.OrderByDescending(p => p.price);
-                return View("Index", sortedProductsDescending.Include(c => c.Company).Where(c => c.isActive == true && c.isReserved == false && c.Company.isActive == true));
+                return View("Index", sortedProductsDescending.Include(c => c.Company).Include(c => c.Category)
+                                    .Where(c => c.isActive == true && c.isReserved == false && c.Company.isActive == true && c.Category.isActive == true));
 
             }
             else
@@ -390,23 +376,26 @@ namespace Rental4You.Controllers
 
             if (requirement == "ascending")
             {
-                var list = carlist.OrderBy(c => c.Company.Rating).Include(c => c.Company).Where(c => c.isActive == true 
-                && c.isReserved == false && c.Company.isActive == true);
+                var list = carlist.OrderBy(c => c.Company.Rating).Include(c => c.Company).Include(c => c.Category)
+                    .Where(c => c.isActive == true 
+                && c.isReserved == false && c.Company.isActive == true && c.Category.isActive == true);
                 return View("Index", list);
             }
 
             if (requirement == "descending")
             {
-                var list = carlist.OrderByDescending(c => c.Company.Rating).Include(c => c.Company).Where(c => c.isActive == true && c.isReserved == false
-                && c.Company.isActive == true);
+                var list = carlist.OrderByDescending(c => c.Company.Rating).Include(c => c.Company).Include(c => c.Category)
+                    .Where(c => c.isActive == true && c.isReserved == false
+                && c.Company.isActive == true && c.Category.isActive == true);
                 return View("Index", list);
             }
 
-            return View("Index", carlist.Include(c => c.Company).Where(c => c.isActive == true && c.isReserved == false));
+            return View("Index", carlist.Include(c => c.Company).Include(c => c.Category).Where(c => c.isActive == true && c.isReserved == false && c.Category.isActive == true));
         }
 
-        public ActionResult GetCategories(string requirement)
+        public ActionResult GetCategories(int requirement)
         {
+            ViewData["categories"] = new SelectList(_context.categories.Where(c => c.isActive == true), "Id", "Name");
             var carlist = _context.cars;
 
             if (User.IsInRole("Employee") || User.IsInRole("Manager"))
@@ -418,37 +407,26 @@ namespace Rental4You.Controllers
                 {
                     if (u.Id == userList.CompanyId)
                     {
-                        if (requirement == "sports")
+                        if (requirement == 0)
                         {
-                            return View("Index", _context.cars.Include(c => c.Company)
-                            .Where(c => c.CompanyId == u.Id && c.Type == "sport"));
-                        }
-                        if (requirement == "suv")
-                        {
-                            return View("Index", _context.cars.Include(c => c.Company)
-                            .Where(c => c.CompanyId == u.Id && c.Type == "SUV"));
+                            return View("Index", _context.cars.Include(c => c.Company).Include(c => c.Category)
+                            .Where(c => c.CompanyId == u.Id && c.Category.Id == requirement && c.Category.isActive == true));
                         }
 
-                        return View("Index", _context.cars.Include(c => c.Company)
-                            .Where(c => c.CompanyId == u.Id));
+                        return View("Index", _context.cars.Include(c => c.Company).Include(c => c.Category)
+                            .Where(c => c.CompanyId == u.Id && c.Category.isActive == true));
                     }
                 }
             }
 
-            if (requirement == "sports")
+            if (requirement == 0)
             {
-
-                return View("Index", carlist.Include(c => c.Company).Where(c => c.Type == "sport" && c.isActive == true && c.isReserved == false
-                && c.Company.isActive == true));
+                return View("Index", _context.cars.Include(c => c.Company).Include(c => c.Category)
+                            .Where(c => c.Category.Id == requirement && c.Category.isActive == true));
             }
-            if (requirement == "suv")
-            {
-                return View("Index", carlist.Include(c => c.Company).Where(c => c.Type == "SUV" && c.isActive == true && c.isReserved == false
-                && c.Company.isActive == true));
-            }
-
-            return View("Index", carlist.Include(c => c.Company).Where(c => c.isActive == true && c.isReserved == false
-            && c.Company.isActive == true));
+            return View("Index", carlist.Include(c => c.Company).Include(c => c.Category)
+                .Where(c => c.isActive == true && c.isReserved == false
+            && c.Company.isActive == true && c.Category.Id == requirement));
         }
 
 
@@ -467,52 +445,57 @@ namespace Rental4You.Controllers
                     {
                         if (requirement == "oil")
                         {
-                            return View("Index", _context.cars.Include(c => c.Company)
-                            .Where(c => c.CompanyId == u.Id && c.fuel == "oil"));
+                            return View("Index", _context.cars.Include(c => c.Company).Include(c => c.Category)
+                            .Where(c => c.CompanyId == u.Id && c.fuel == "oil" && c.Category.isActive == true));
                         }
                         if (requirement == "gas")
                         {
-                            return View("Index", _context.cars.Include(c => c.Company)
-                            .Where(c => c.CompanyId == u.Id && c.fuel == "gas"));
+                            return View("Index", _context.cars.Include(c => c.Company).Include(c => c.Category)
+                            .Where(c => c.CompanyId == u.Id && c.fuel == "gas" && c.Category.isActive == true));
                         }
                         if (requirement == "hybrid")
                         {
-                            return View("Index", _context.cars.Include(c => c.Company)
-                            .Where(c => c.CompanyId == u.Id && c.fuel == "hybrid"));
+                            return View("Index", _context.cars.Include(c => c.Company).Include(c => c.Category)
+                            .Where(c => c.CompanyId == u.Id && c.fuel == "hybrid" && c.Category.isActive == true));
                         }
                         if (requirement == "electric")
                         {
-                            return View("Index", _context.cars.Include(c => c.Company)
-                            .Where(c => c.CompanyId == u.Id && c.fuel == "electric"));
+                            return View("Index", _context.cars.Include(c => c.Company).Include(c => c.Category)
+                            .Where(c => c.CompanyId == u.Id && c.fuel == "electric" && c.Category.isActive == true));
                         }
 
-                        return View("Index", _context.cars.Include(c => c.Company)
-                            .Where(c => c.CompanyId == u.Id));
+                        return View("Index", _context.cars.Include(c => c.Company).Include(c => c.Category)
+                            .Where(c => c.CompanyId == u.Id && c.Category.isActive == true));
                     }
                 }
             }
 
             if (requirement == "oil")
             {
-                return View("Index", carlist.Include(c => c.Company).Where(c => c.fuel == "oil" && c.isActive == true && c.isReserved == false
-                && c.Company.isActive == true));
+                return View("Index", carlist.Include(c => c.Company).Include(c => c.Category)
+                    .Where(c => c.fuel == "oil" && c.isActive == true && c.isReserved == false
+                && c.Company.isActive == true && c.Category.isActive == true));
             }
             if (requirement == "gas")
             {
-                return View("Index", carlist.Include(c => c.Company).Where(c => c.fuel == "gas" && c.isActive == true && c.isReserved == false
-                && c.Company.isActive == true));
+                return View("Index", carlist.Include(c => c.Company).Include(c => c.Category)
+                    .Where(c => c.fuel == "gas" && c.isActive == true && c.isReserved == false
+                && c.Company.isActive == true && c.Category.isActive == true));
             }
             if (requirement == "electric")
             {
-                return View("Index", carlist.Include(c => c.Company).Where(c => c.fuel == "electric" && c.isActive == true && c.isReserved == false
-                && c.Company.isActive == true));
+                return View("Index", carlist.Include(c => c.Company).Include(c => c.Category)
+                    .Where(c => c.fuel == "electric" && c.isActive == true && c.isReserved == false
+                && c.Company.isActive == true && c.Category.isActive == true));
             }
             if (requirement == "hybrid")
             {
-                return View("Index", carlist.Include(c => c.Company).Where(c => c.fuel == "hybrid" && c.isActive == true && c.isReserved == false
-                && c.Company.isActive == true));
+                return View("Index", carlist.Include(c => c.Company).Include(c => c.Category)
+                    .Where(c => c.fuel == "hybrid" && c.isActive == true && c.isReserved == false
+                && c.Company.isActive == true && c.Category.isActive == true));
             }
-            return View("Index", carlist.Include(c => c.Company).Where(c => c.isActive == true && c.isReserved == false));
+            return View("Index", carlist.Include(c => c.Company)
+                .Where(c => c.isActive == true && c.isReserved == false && c.Category.isActive == true));
         }
 
         [Authorize(Roles = "Employee, Manager")]
@@ -530,12 +513,14 @@ namespace Rental4You.Controllers
                 {
                     return View("Index", carlist
                         .Include(c => c.Company)
-                        .Where(c => c.CompanyId == u.Id && c.state == requirement));
+                        .Include(c => c.Category)
+                        .Where(c => c.CompanyId == u.Id && c.state == requirement && c.Category.isActive == true));
                 }
             }
             return View("Index", carlist
                        .Include(c => c.Company)
-                       .Where(c => c.state == requirement));
+                       .Include(c => c.Category)
+                       .Where(c => c.state == requirement && c.Category.isActive == true));
         }
 
     }

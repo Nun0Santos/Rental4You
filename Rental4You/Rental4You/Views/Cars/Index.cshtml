@@ -34,7 +34,7 @@
 
 
     <section class="ftco-section bg-light">
-        @if (User.IsInRole("Admin") || User.IsInRole("Manager") || User.IsInRole("Employee"))
+        @if (User.IsInRole("Manager") || User.IsInRole("Employee"))
         {
             <h3 style="margin-left: 20px"><a asp-action="Create" asp-controller="Cars">New Car</a></h3>
         }
@@ -50,10 +50,7 @@
             <div style="border-right: 1px solid #000; margin-left: 10px; margin-right: 10px"></div>
             <form asp-action="GetCategories" method="get">
                 <label for="sort">Car category: </label>
-                <select name="requirement">
-                    <option value="all">All cars</option>
-                    <option value="sports">Sports</option>
-                    <option value="suv">SUV</option>
+                <select name="requirement" asp-items="ViewBag.categories">
                 </select>
                 <input name="btnSubmeter" asp-controller="Cars" asp-action="GetCategories" type="submit" value="Search" />
             </form>

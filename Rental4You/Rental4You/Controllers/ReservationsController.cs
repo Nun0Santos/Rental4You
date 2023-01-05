@@ -379,20 +379,12 @@ namespace Rental4You.Models
                             .Include(c => c.Car.Company)
                             .Where(c => c.Car.CompanyId == u.Id));
                         }
-                        if (requirement == "sports")
-                        {
-                            return View("Index", reservationsList
+
+                        return View("Index", reservationsList
                                 .Include(c => c.Car).Include(c => c.Client)
                                 .Include(c => c.Car.Company)
-                                .Where(c => c.Car.Type == "sport" && c.Car.CompanyId == u.Id));
-                        }
-                        if (requirement == "suv")
-                        {
-                            return View("Index", reservationsList
-                                .Include(c => c.Car).Include(c => c.Client)
-                                .Include(c => c.Car.Company)
-                                .Where(c => c.Car.Type == "SUV" && c.Car.CompanyId == u.Id));
-                        }
+                                .Include(c => c.Car.Category)
+                                .Where(c => c.Car.Category.Name == requirement && c.Car.CompanyId == u.Id));
                     }
                 }
             }
@@ -403,18 +395,12 @@ namespace Rental4You.Models
                 .Include(c => c.Car).Include(c => c.Client)
                 .Include(c => c.Car.Company));
             }
-            if (requirement.Equals("sport"))
-            {
-                return View("Index", reservationsList
-                                .Include(c => c.Car).Include(c => c.Client)
-                                .Include(c => c.Car.Company)
-                                .Where(c => c.Car.Type == "sport"));
-            }
+
             return View("Index", reservationsList
                               .Include(c => c.Car).Include(c => c.Client)
                               .Include(c => c.Car.Company)
-                              .Where(c => c.Car.Type == "SUV"));
-
+                              .Include(c => c.Car.Category)
+                              .Where(c => c.Car.Category.Name == requirement));
         }
 
         [Authorize(Roles = "Admin,Employee,Manager")]

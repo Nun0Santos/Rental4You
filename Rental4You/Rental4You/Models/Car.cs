@@ -12,11 +12,8 @@ namespace Rental4You.Models
         [Display(Name = "Model", Prompt = "Enter the car model")]
 
         public string Model { get; set; }
-        [Display(Name = "Type", Prompt = "Enter the car type")]
 
-        public string Type { get; set; }
         [Display(Name = "Transmission", Prompt = "Enter the car transmission")]
-
         public string Transmission { get; set; } //Automatic ou Manual
         [Display(Name = "Seats", Prompt = "Enter the car seats")]
         public int Seats { get; set; }
@@ -38,5 +35,8 @@ namespace Rental4You.Models
         public int CompanyId { get; set; }
         public bool isActive { get; set; }
         public bool isReserved { get; set; }
+
+        public Category Category { get; set; }
+        public int CategoryId { get; set; }
     }
 }

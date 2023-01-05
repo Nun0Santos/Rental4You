@@ -27,13 +27,6 @@
 
         makers.Add(m.Car.Maker);
     }
-
-    foreach(var c in Model)
-    {
-        if (categories.Contains(c.Car.Type))
-          continue;
-        categories.Add(c.Car.Type);
-    }
 }
 
 <h1>All Reservations</h1>
@@ -51,11 +44,7 @@
     <div style="border-right: 1px solid #000; margin-left: 10px; margin-right: 10px"></div>
     <form asp-action="GetCategories" method="get">
             <label for="sort">Car category: </label>
-            <select name="requirement">
-                 @foreach (var c in categories)
-                 {
-                    <option value="@c">@c</option>
-                 }
+            <select name="requirement" asp-items="ViewBag.categories">
             </select>
         <input name="btnSubmeter" asp-controller="Reservations" asp-action="GetCategories" type="submit" value="Search" />
         </form>

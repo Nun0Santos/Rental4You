@@ -40,6 +40,7 @@
                     <li class="nav-item"><a asp-controller="Cars" asp-action="Index" class="nav-link">Cars</a></li>
                     @if(User.IsInRole("Admin")){
                         <li class="nav-item"><a asp-controller="UserRolesManager" asp-action="Index" class="nav-link">Users</a></li>
+                        <li class="nav-item"><a asp-controller="Categories" asp-action="Index" class="nav-link">Categories</a></li>
                     }
                     @if (User.IsInRole("Admin") || User.IsInRole("Manager") || User.IsInRole("Employee"))
                     {

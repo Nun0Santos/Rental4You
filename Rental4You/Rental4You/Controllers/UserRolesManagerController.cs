@@ -20,7 +20,7 @@ namespace Rental4You.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var users = await _userManager.Users.ToListAsync();
+            var users = await _userManager.Users.Where(x => x.Id != _userManager.GetUserId(User)).ToListAsync();
             var userRoles = new List<UserRolesViewModel>();
 
             foreach (var u in users)
