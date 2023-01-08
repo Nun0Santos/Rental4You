@@ -239,6 +239,7 @@ namespace Rental4You.Controllers
         [Authorize(Roles = "Employee, Manager")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            ViewData["categories"] = new SelectList(_context.categories.Where(c => c.isActive == true), "Id", "Name");
             if (_context.cars == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.cars'  is null.");
@@ -326,7 +327,8 @@ namespace Rental4You.Controllers
         }
         public ActionResult GetProducts(string sort)
         {
-          
+            ViewData["categories"] = new SelectList(_context.categories.Where(c => c.isActive == true), "Id", "Name");
+
             var carlist = _context.cars;
 
             if (User.IsInRole("Employee") || User.IsInRole("Manager"))
@@ -372,6 +374,7 @@ namespace Rental4You.Controllers
 
         public ActionResult OrderByRating(string requirement)
         {
+            ViewData["categories"] = new SelectList(_context.categories.Where(c => c.isActive == true), "Id", "Name");
             var carlist = _context.cars.Include(c => c.Company);
 
             if (requirement == "ascending")
@@ -432,6 +435,7 @@ namespace Rental4You.Controllers
 
         public ActionResult GetFuel(string requirement)
         {
+            ViewData["categories"] = new SelectList(_context.categories.Where(c => c.isActive == true), "Id", "Name");
             var carlist = _context.cars;
 
             if (User.IsInRole("Employee") || User.IsInRole("Manager"))
@@ -502,6 +506,7 @@ namespace Rental4You.Controllers
 
         public ActionResult getState(string requirement)
         {
+            ViewData["categories"] = new SelectList(_context.categories.Where(c => c.isActive == true), "Id", "Name");
             var carlist = _context.cars.Include(c => c.Company);
             var userList = _context.Users.Find(_userManager.GetUserId(User));
 

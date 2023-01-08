@@ -29,6 +29,7 @@ namespace Rental4You.Models
         [Authorize(Roles = "Admin, Employee, Manager")]
         public async Task<IActionResult> Index()
         {
+            ViewData["categories"] = new SelectList(_context.categories.Where(c => c.isActive == true), "Id", "Name");
             if (User.IsInRole("Employee") || User.IsInRole("Manager"))
             {
                 var userList = _context.Users.Find(_userManager.GetUserId(User));
@@ -265,6 +266,7 @@ namespace Rental4You.Models
         [Authorize(Roles = "Admin, Employee, Manager, Client")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            ViewData["categories"] = new SelectList(_context.categories.Where(c => c.isActive == true), "Id", "Name");
             if (_context.reservations == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.reservations'  is null.");
@@ -309,9 +311,7 @@ namespace Rental4You.Models
                 await _context.SaveChangesAsync();
             }
 
-            return View("Index", _context.reservations.Include(r => r.Car)
-                .Include(r => r.Client)
-                .Include(r => r.Car.Company));
+            return RedirectToAction(nameof(Index));
         }
 
         [Authorize(Roles = "Client")]
@@ -329,6 +329,7 @@ namespace Rental4You.Models
         [Authorize(Roles = "Admin,Employee,Manager")]
         public ActionResult GetDate(DateTime pickUpdate, DateTime returnDate)
         {
+            ViewData["categories"] = new SelectList(_context.categories.Where(c => c.isActive == true), "Id", "Name");
             var reservationsList = _context.reservations;
             var carList = _context.cars;
 
@@ -358,8 +359,9 @@ namespace Rental4You.Models
             }
 
         [Authorize(Roles = "Admin,Employee,Manager")]
-        public ActionResult GetCategories(string requirement)
+        public ActionResult GetCategories(int requirement)
         {
+            ViewData["categories"] = new SelectList(_context.categories.Where(c => c.isActive == true), "Id", "Name");
             var reservationsList = _context.reservations;
             var carList = _context.cars;
 
@@ -372,7 +374,7 @@ namespace Rental4You.Models
                 {
                     if (u.Id == userList.CompanyId)
                     {
-                        if (requirement == "All categories")
+                        if (requirement == 0)
                         {
                             return View("Index", reservationsList
                             .Include(c => c.Car).Include(c => c.Client)
@@ -384,12 +386,12 @@ namespace Rental4You.Models
                                 .Include(c => c.Car).Include(c => c.Client)
                                 .Include(c => c.Car.Company)
                                 .Include(c => c.Car.Category)
-                                .Where(c => c.Car.Category.Name == requirement && c.Car.CompanyId == u.Id));
+                                .Where(c => c.Car.Category.Id == requirement && c.Car.CompanyId == u.Id));
                     }
                 }
             }
 
-            if (requirement == "All categories")
+            if (requirement == 0)
             {
                 return View("Index", reservationsList
                 .Include(c => c.Car).Include(c => c.Client)
@@ -400,12 +402,13 @@ namespace Rental4You.Models
                               .Include(c => c.Car).Include(c => c.Client)
                               .Include(c => c.Car.Company)
                               .Include(c => c.Car.Category)
-                              .Where(c => c.Car.Category.Name == requirement));
+                              .Where(c => c.Car.Category.Id == requirement));
         }
 
         [Authorize(Roles = "Admin,Employee,Manager")]
         public ActionResult GetMaker(string maker)
         {
+            ViewData["categories"] = new SelectList(_context.categories.Where(c => c.isActive == true), "Id", "Name");
             var reservationsList = _context.reservations;
             var carList = _context.cars;
 
@@ -453,6 +456,7 @@ namespace Rental4You.Models
         [Authorize(Roles = "Admin,Employee,Manager")]
         public ActionResult GetClients(string client)
         {
+            ViewData["categories"] = new SelectList(_context.categories.Where(c => c.isActive == true), "Id", "Name");
             var reservationsList = _context.reservations;
             var carList = _context.cars;
 
