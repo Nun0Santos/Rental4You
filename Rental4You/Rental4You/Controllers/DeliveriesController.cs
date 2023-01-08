@@ -109,11 +109,11 @@ namespace Rental4You.Models
         }
 
         // GET: Deliveries/Create
-        public IActionResult Create()
+        public IActionResult Create(int idReservation)
         {
             ViewData["CarId"] = new SelectList(_context.cars, "Id", "Id");
             ViewData["EmployeeId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["ReservationId"] = new SelectList(_context.reservations, "Id", "Id");
+            ViewData["ReservationId"] = new SelectList(_context.reservations.Where(c => c.Id == idReservation), "Id", "Id");
             return View();
         }
 
@@ -124,9 +124,6 @@ namespace Rental4You.Models
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Km,Damage,Observations,CarId,EmployeeId,ReservationId")] Delivery delivery, [FromForm] List<IFormFile> files)
         {
-            ViewData["CarId"] = new SelectList(_context.cars, "Id", "Id");
-            ViewData["ReservationId"] = new SelectList(_context.reservations, "Id", "Id");
-
             ModelState.Remove(nameof(delivery.EmployeeId));
             ModelState.Remove(nameof(delivery.Car));
             ModelState.Remove(nameof(delivery.Employee));

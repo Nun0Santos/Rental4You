@@ -83,7 +83,7 @@
                     <a asp-action="Delete" asp-route-id="@item.Id" class="btn-danger btn">Delete</a>
                 }else{
                     if(!item.isDelivered){
-                        <a asp-controller="Deliveries" asp-action="Create" class="btn-warning btn">Return</a>
+                        <a asp-controller="Deliveries" asp-action="Create" asp-route-idReservation="@item.Id" class="btn-warning btn">Return</a>
                     }
                 }
 
